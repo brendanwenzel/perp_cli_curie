@@ -160,6 +160,19 @@ perp amm --short
 ...
 ```
 
+## Quit Market
+
+Close all positions in the specific market
+
+```bash
+perp quit <base_token_address>
+
+#Output
+Closed all vBTC positions for 1948.234556321223459 USD
+```
+
+
+
 #### To Do
 
 - Buffer the print line statements to output all at the same time
@@ -172,7 +185,4 @@ perp amm --short
 - Option handling for portfolio
   - perp portfolio 
     - Returns portfolio for default address
-  - perp portfolio 0x93992...9493
-    - Returns portfolio for user input address
 - Add Market Price with slot0 function to AMM pairs data
-- 

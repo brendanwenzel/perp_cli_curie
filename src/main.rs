@@ -1,5 +1,5 @@
 use clap::Parser;
-use perpcli_rs::{amm, args::{PerpArgs, SubCommand}, position, portfolio};
+use perpcli_rs::{amm, args::{PerpArgs, SubCommand}, position, portfolio, quit};
 
 fn main() {
     env_logger::init();
@@ -8,6 +8,6 @@ fn main() {
         SubCommand::Position(position) => position::process(position),
         SubCommand::Portfolio(portfolio) => portfolio::process(portfolio),
         SubCommand::Amm(amm) => amm::process(amm),
-        // SubCommand::Verify(verify) => verify::process(verify),
+        SubCommand::Quit(token) => quit::process(token),
     }
 }

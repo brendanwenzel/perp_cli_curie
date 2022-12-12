@@ -20,6 +20,8 @@ pub enum SubCommand {
     Amm(AmmCommand),
     // /// Verify Function Data
     // Verify(VerifyCommand)
+    /// Close all positions in specific market 
+    Quit(QuitCommand),
 }
 
 #[derive(Debug, Args)]
@@ -34,6 +36,13 @@ pub struct PositionCommand {
     #[clap(short, long)]
     /// Limit the amount of blocks to look back for positions
     pub limit: Option<usize>,
+}
+
+#[derive(Debug, Args)]
+/// Close all positions in specific market
+pub struct QuitCommand {
+    /// Base token address to close positions for
+    pub base_token: Option<String>,
 }
 
 #[derive(Debug, Args)]

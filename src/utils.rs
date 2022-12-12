@@ -47,7 +47,7 @@ pub async fn create_websocket_client() -> Result<Arc<Provider<Ws>>> {
 }
 
 /// Construct the searcher wallet
-pub fn get_searcher_wallet() -> Result<LocalWallet> {
+pub fn get_wallet() -> Result<LocalWallet> {
     dotenv().ok();
     let private_key = std::env::var("PRIVATE_KEY")
         .map_err(|_| eyre::eyre!("Required environment variable \"PRIVATE_KEY\" not set"))?;
@@ -61,7 +61,7 @@ pub fn create_http_client(
     p: Provider<Http>,
     chain_id: u64,
 ) -> Result<Arc<SignerMiddleware<Provider<Http>, LocalWallet>>> {
-    let wallet = get_searcher_wallet()?;
+    let wallet = get_wallet()?;
     let client = SignerMiddleware::new(p, wallet.with_chain_id(chain_id));
     Ok(Arc::new(client))
 }

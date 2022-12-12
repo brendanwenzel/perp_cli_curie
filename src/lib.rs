@@ -16,6 +16,9 @@ pub mod contracts;
 /// ABIs
 pub mod abis;
 
+/// Quit
+pub mod quit;
+
 /// Address List
 pub mod address_list;
 
@@ -33,5 +36,5 @@ pub mod position;
 
 /// Re-export a prelude
 pub mod prelude {
-    pub use super::{abis::*, amm::*, args::*, address_list::*, position::*, portfolio::*, address_list::*, contracts::*, utils::*};
+    pub use super::{abis::*, amm::*, args::*, address_list::*, position::*, portfolio::*, quit::*, address_list::*, contracts::*, utils::*};
 }
