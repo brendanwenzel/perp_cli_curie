@@ -1,12 +1,56 @@
 # Perpetual Protocol CLI for v2 Curie on Optimism
 
-The goal of this tool is to provide a simple, fast and efficient way to interact Perpetual Protocol contracts from your terminal.
+This tool is to provide a simple, fast and efficient way to interact Perpetual Protocol contracts from your terminal.
 
 This light-weight interface provides you with most tools you can find on the website.
 
 Please take advantage of GitHub's Issues tab if this tool isn't working as expected in any way.
 
 Suggested features are always welcome as well.
+
+## Installation
+
+
+
+## Slow Positions
+
+```bash
+perp position [--trader | -t <trader_address>] [--base_token | -b <base_token_address>] [--limit | -l <block_limit_number>]
+```
+All flags are optional. Default is 250 blocks as a limit.
+
+### Example
+No flags shows all new positions for last 250 blocks.
+
+```bash
+perp position
+
+#Output
+=====================
+====  LONG: vAAVE ====
+=====================
+- Trader: 0x641...d48a9
+- Price: 60.78736190592878
+- Size: 17.173882321387264022
+- Tx: 0xefbd695...3326532c32fa8
+
+=====================
+==== SHORT: vFLOW ====
+=====================
+- Trader: 0xc2c...fc10a
+- Price: 0.9495278688064187
+- Size: -358.494375555603868226
+- Tx: 0x8b260ba14d...9e8e755a315ae044
+
+=====================
+==== SHORT: vBTC ====
+=====================
+- Trader: 0x25d...cef7da
+- Price: 17122.630252547333
+- Size: -0.061000235891275911
+- Tx: 0x880bc37...f39c030b7f856a421ed
+...
+```
 
 ## Show Portfolio
 
@@ -66,7 +110,7 @@ Index Price: 1265.380000000000000000
 ## Show AMM information 
 
 ```bash 
-perp amm [<pool_address> | <base_token_address> | <base_token_symbol>] [--short] # --short flag prints all AMM Symbols and Addresses
+perp amm [<pool_address> | <base_token_address> | <base_token_symbol>] [--short | -s] # --short flag prints all AMM Symbols and Addresses
 ```
 
 You can filter by a specific pool address, base token address or base token symbol. This will return only that pool.
