@@ -13,9 +13,10 @@ struct QuitMarket {
 /// Process the request to quit market.
 pub async fn process(token: QuitCommand) {
     let http_provider = utils::get_http_provider().expect("Failed");
-    let client = utils::create_http_client(http_provider.clone(), 10).expect("Failed");
+    let client = utils::create_http_client(http_provider.clone()).expect("Failed");
     let clearing_house_contract = contracts::get_clearing_house(&client);
-    let trader_address = utils::get_wallet().unwrap().address();
+    let signer = utils::get_wallet().unwrap();
+    let trader_address = signer.address();
     let mut token_address =  String::from("0x0000000000000000000000000000000000000000").parse::<Address>().unwrap();
     match token.base_token {
         Some(token) => token_address = token.parse::<Address>().unwrap(),
@@ -32,11 +33,14 @@ pub async fn process(token: QuitCommand) {
     let quit_market = clearing_house_contract
         .method::<_, QuitMarket>("quitMarket", (trader_address, token_address))
         .expect("Failed to call method")
-        .call()
+        .send()
         .await
-        .expect("Failed");
+        .expect("Failed")
+        .await
+        .expect("Failed")
+        .unwrap();
 
     println!("");
-    println!("Closed all {} positions for {} USD", base_symbol, ethers::utils::format_units(quit_market.quote, "ether").unwrap());
+    println!("Closed all {} positions: {:?}", base_symbol, quit_market.transaction_hash);
 
 }

@@ -46,7 +46,7 @@ pub async fn process(args: PortfolioCommand) {
 
     // Connect to Provider and Create Client
     let http_provider = utils::get_http_provider().expect("Failed");
-    let client = utils::create_http_client(http_provider.clone(), 10).expect("Failed");
+    let client = utils::create_http_client(http_provider.clone()).expect("Failed");
 
     // Connecting Contracts
     let perp_portal_contract = contracts::get_perp_portal(&client);

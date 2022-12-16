@@ -22,8 +22,21 @@ pub enum SubCommand {
     // Verify(VerifyCommand)
     /// Close all positions in specific market 
     Quit(QuitCommand),
+    /// List all base token symbols and addresses
+    Tokens(TokensCommand),
+    /// Deposit new collateral into Perp account
+    Deposit(DepositCommand),
+    /// Withdraw collateral from Perp account
+    Withdraw(WithdrawCommand),
 }
 
+#[derive(Debug, Args)]
+/// Tokens Command
+pub struct TokensCommand {
+    /// The address of the wallet to query
+    #[clap(short, long)]
+    pub symbol: Option<String>,
+}
 #[derive(Debug, Args)]
 /// Position Command
 pub struct PositionCommand { 
@@ -60,6 +73,30 @@ pub struct AmmCommand {
     pub short: Option<bool>,
     /// Search with pool address, base token address or base token symbol (ie vBTC, vPERP, vSOL)
     pub search_parameter: Option<String>,
+}
+
+#[derive(Debug, Args)]
+/// Deposit Command
+pub struct DepositCommand {
+    /// Token address to deposit as collateral. Use "perp deposit" for list of accepted collateral tokens.
+    pub token: Option<String>,
+    /// Amount to deposit... for example 0.1 or 600.594... backend will convert to wei format.
+    pub amount: Option<f64>,
+    #[clap(long)]
+    /// Deposit unwrapped Ether
+    pub eth: Option<f64>,
+}
+
+#[derive(Debug, Args)]
+/// Withdraw Command
+pub struct WithdrawCommand {
+    /// Token address to withdraw as collateral. Use "perp withdraw" for list of accepted collateral tokens.
+    pub token: Option<String>,
+    /// Amount to withdraw... for example 0.1 or 600.594... backend will convert to wei format.
+    pub amount: Option<f64>,
+    #[clap(long)]
+    /// Withdraw unwrapped Ether
+    pub eth: Option<f64>,
 }
 
 // #[derive(Debug, Args)]

@@ -1,4 +1,4 @@
-# Perpetual Protocol CLI for v2 Curie on Optimism
+# Perpetual Protocol CLI for Perp v2 Curie
 
 This tool is to provide a simple, fast and efficient way to interact Perpetual Protocol contracts from your terminal.
 
@@ -10,7 +10,14 @@ Suggested features are always welcome as well.
 
 ## Installation
 
+Add a .env file to the main folder with the following parameters:
 
+```env
+RPC_URL=
+RPC_URL_WSS=
+CHAIN_ID=
+PRIVATE_KEY=
+```
 
 ## Slow Positions
 
@@ -160,9 +167,31 @@ perp amm --short
 ...
 ```
 
-## Quit Market
+## List All Base Tokens
 
-Close all positions in the specific market
+Simple list of base tokens available. See more details with the "amm" command.
+
+You can get back one address by using the base token symbol. ie vBTC, vETH, etc
+
+```bash
+perp tokens [--symbol | -s <base_token_symbol>]
+
+#Output with symbol "perp tokens --symbol vBTC"
+vBTC: 0x86f1e0420c26a858fc203a3645dd1a36868f18e5
+
+#Output with no symbol
+vPERP: 0x9482aafdced6b899626f465e1fa0cf1b1418d797
+vCRV: 0x7161c3416e08abaa5cd38e68d9a28e43a694e037
+vFTM: 0x2db8d2db86ca3a4c7040e778244451776570359b
+vETH: 0x8c835dfaa34e2ae61775e80ee29e2c724c6ae2bb
+vATOM: 0x5f714b5347f0b5de9f9598e39840e176ce889b9c
+vLINK: 0x2f198182ec54469195a4a06262a9431a42462373
+...
+
+```
+
+## Quit Market
+Close all positions in the specific market. You must specify which market you want to close with the base token's address. You can get the list of base tokens with addresses with the "tokens" command.
 
 ```bash
 perp quit <base_token_address>
@@ -171,6 +200,81 @@ perp quit <base_token_address>
 Closed all vBTC positions for 1948.234556321223459 USD
 ```
 
+## Deposit Collateral
+Deposit any collateral token. It's recommended to hold USDC as the primary collateral.
+
+### Options
+No arguments/Flags will provide names and addresses of accepted collateral
+
+```bash
+perp deposit [<base_token_address> <amount> | --eth <amount>]
+```
+
+### Examples
+```bash
+perp deposit
+
+#Output
+WETH: 0x4200000000000000000000000000000000000006
+USDC: 0x7f5c764cbc14f9669b88837ca1490cca17c31607
+OP: 0x4200000000000000000000000000000000000042
+USDT: 0x94b008aa00579c1307b0ef2c499ad98a8ce58e58
+FRAX: 0x2e3d870790dc77a83dd1d18184acc7439a53f475
+```
+```bash
+perp deposit --eth 1.529
+
+#Output 
+Deposited 1.39183 ETH 
+Transaction: 0x7c...4ddb9
+```
+```bash
+perp deposit 0x7f5c764cbc14f9669b88837ca1490cca17c31607 1937.212
+
+#Output
+Deposited 1937.212 USDC
+Transaction: 0x7c...4ddb9
+```
+
+## Withdraw Collateral
+Withdraw collateral tokens.
+
+### Options
+No arguments/Flags will provide names and addresses of accepted collateral
+
+```bash
+perp withdraw [<base_token_address> <amount> | --eth <amount>]
+```
+
+### Examples
+```bash
+perp withdraw
+
+#Output
+WETH: 0x4200000000000000000000000000000000000006
+USDC: 0x7f5c764cbc14f9669b88837ca1490cca17c31607
+OP: 0x4200000000000000000000000000000000000042
+USDT: 0x94b008aa00579c1307b0ef2c499ad98a8ce58e58
+FRAX: 0x2e3d870790dc77a83dd1d18184acc7439a53f475
+```
+```bash
+perp withdraw --eth 1.529
+
+#Output 
+Withdrew 1.39183 ETH 
+Transaction: 0x7c...4ddb9
+```
+```bash
+perp withdraw 0x7f5c764cbc14f9669b88837ca1490cca17c31607 1937.212
+
+#Output
+Withdrew 1937.212 USDC
+Transaction: 0x7c...4ddb9
+```
+
+## Open a Position
+
+## Close a Position
 
 
 #### To Do

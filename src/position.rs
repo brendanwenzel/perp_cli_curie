@@ -38,7 +38,7 @@ pub async fn process(args: PositionCommand) {
 
     // Connect to Provider and Create Client
     let http_provider = utils::get_http_provider().expect("Failed");
-    let client = utils::create_http_client(http_provider.clone(), 10).expect("Failed");
+    let client = utils::create_http_client(http_provider.clone()).expect("Failed");
     let _clearing_house_contract = contracts::get_clearing_house(&client);
     let zero_address = String::from("0x0000000000000000000000000000000000000000").parse::<Address>().unwrap();
     let mut variables = Variables {

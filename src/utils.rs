@@ -11,6 +11,7 @@ pub fn read_env_vars() -> Result<Vec<(String, String)>> {
     let keys = vec![
         "RPC_URL",
         "RPC_URL_WSS",
+        "CHAIN_ID",
         "PRIVATE_KEY"
     ];
     for key in keys {
@@ -57,11 +58,12 @@ pub fn get_wallet() -> Result<LocalWallet> {
 }
 
 /// Creates a client from a provider
-pub fn create_http_client(
-    p: Provider<Http>,
-    chain_id: u64,
-) -> Result<Arc<SignerMiddleware<Provider<Http>, LocalWallet>>> {
+pub fn create_http_client(p: Provider<Http>) -> Result<Arc<SignerMiddleware<Provider<Http>, LocalWallet>>> {
     let wallet = get_wallet()?;
+    let chain_id: u64 = std::env::var("CHAIN_ID")
+        .map_err(|_| eyre::eyre!("Required environment variable \"RPC_URL\" not set - get_http_provider"))?
+        .parse::<u64>()
+        .unwrap();
     let client = SignerMiddleware::new(p, wallet.with_chain_id(chain_id));
     Ok(Arc::new(client))
 }

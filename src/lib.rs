@@ -7,9 +7,6 @@
 /// Common Utilities
 pub mod utils;
 
-/// Contracts, Pools and Tokens
-pub mod addresses;
-
 /// Contract Instances
 pub mod contracts;
 
@@ -34,7 +31,16 @@ pub mod amm;
 /// Position Command
 pub mod position;
 
+/// Tokens Command
+pub mod tokens;
+
+/// Deposit Command
+pub mod deposit;
+
+/// Withdraw Command
+pub mod withdraw;
+
 /// Re-export a prelude
 pub mod prelude {
-    pub use super::{abis::*, amm::*, args::*, address_list::*, position::*, portfolio::*, quit::*, address_list::*, contracts::*, utils::*};
+    pub use super::{abis::*, amm::*, deposit::*, withdraw::*, args::*, position::*, portfolio::*, quit::*, address_list::*, contracts::*, utils::*};
 }

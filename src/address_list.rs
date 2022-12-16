@@ -154,6 +154,20 @@ pub fn get_token_addresses() -> HashMap<String, Address> {
     token_addresses
 }
 
+/// Collateral Tokens
+pub fn get_collateral_tokens() -> HashMap<String, Address> {
+    let collaterals = HashMap::from(
+        [
+            ("USDC".to_string(), "0x7F5c764cBc14f9669B88837ca1490cCa17c31607".parse::<Address>().unwrap()),
+            ("USDT".to_string(), "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58".parse::<Address>().unwrap()),
+            ("WETH".to_string(), "0x4200000000000000000000000000000000000006".parse::<Address>().unwrap()),
+            ("FRAX".to_string(), "0x2E3D870790dC77A83DD1d18184Acc7439A53f475".parse::<Address>().unwrap()),
+            ("OP".to_string(), "0x4200000000000000000000000000000000000042".parse::<Address>().unwrap()),
+        ]
+    );
+    collaterals
+}
+
 // /// Contract Addresses
 // pub fn contracts() -> ContractAddresses {
 //     ContractAddresses {

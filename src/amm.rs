@@ -9,7 +9,7 @@ pub async fn process(args: AmmCommand) {
     let pools_iter = pools.iter();
 
     let http_provider = utils::get_http_provider().expect("Failed");
-    let client = utils::create_http_client(http_provider.clone(), 10).expect("Failed");
+    let client = utils::create_http_client(http_provider.clone()).expect("Failed");
 
     if args.search_parameter == None && args.short == Some(false) {
         println!("");
