@@ -19,7 +19,7 @@ CHAIN_ID=
 PRIVATE_KEY=
 ```
 
-## Slow Positions
+## Show Positions
 
 ```bash
 perp position [--trader | -t <trader_address>] [--base_token | -b <base_token_address>] [--limit | -l <block_limit_number>]
@@ -190,16 +190,6 @@ vLINK: 0x2f198182ec54469195a4a06262a9431a42462373
 
 ```
 
-## Quit Market
-Close all positions in the specific market. You must specify which market you want to close with the base token's address. You can get the list of base tokens with addresses with the "tokens" command.
-
-```bash
-perp quit <base_token_address>
-
-#Output
-Closed all vBTC positions for 1948.234556321223459 USD
-```
-
 ## Deposit Collateral
 Deposit any collateral token. It's recommended to hold USDC as the primary collateral.
 
@@ -221,6 +211,7 @@ OP: 0x4200000000000000000000000000000000000042
 USDT: 0x94b008aa00579c1307b0ef2c499ad98a8ce58e58
 FRAX: 0x2e3d870790dc77a83dd1d18184acc7439a53f475
 ```
+
 ```bash
 perp deposit --eth 1.529
 
@@ -228,6 +219,7 @@ perp deposit --eth 1.529
 Deposited 1.39183 ETH 
 Transaction: 0x7c...4ddb9
 ```
+
 ```bash
 perp deposit 0x7f5c764cbc14f9669b88837ca1490cca17c31607 1937.212
 
@@ -264,6 +256,7 @@ perp withdraw --eth 1.529
 Withdrew 1.39183 ETH 
 Transaction: 0x7c...4ddb9
 ```
+
 ```bash
 perp withdraw 0x7f5c764cbc14f9669b88837ca1490cca17c31607 1937.212
 
@@ -273,9 +266,63 @@ Transaction: 0x7c...4ddb9
 ```
 
 ## Open a Position
+```bash
+perp open [--long | --short] <token_address> [--input | --output] <amount>
+```
+
+You must specify either long or short. 
+
+Then the token address for the base token you wish to trade. 
+
+You must choose whether to specify the input amount or output amount.
+
+For example, if you are longing, input will specify the vUSD in and output will specify the base token amount out.
+
+The opposite applies for shorting. Input will specify the base token amount in and output will specify the vUSD out.
+
+### Examples
+```bash
+perp open --long 0xb6599bd362120dc70d48409b8a08888807050700 --input 5000
+
+#Output
+========================
+== New LONG on vBNB ==
+========================
+
+Transaction: 0xd2f55f8412c99c4dc75e3ad23f289fece17d02f922093260856277a1d24672f7
+Position Size: 20.524591260706146 vBNB
+Avg Price: 243.36660041375887 USD
+Fee Paid: 5 USD
+```
 
 ## Close a Position
+You must specify which market you want to close with the base token's address. You can get the list of base tokens with addresses with the "tokens" command.
 
+### Examples
+```bash
+perp close 0xb6599bd362120dc70d48409b8a08888807050700
+
+#Output
+========================
+== CLOSING vBNB ==
+========================
+
+Transaction: 0x64ecedded6ce7d73595af9a4ba8280a74c1d1c36be78f57a5699a1abe9be16ad
+Position Size: -38.41538448145886 vBNB
+Avg Price: 243.6099477837393 USD
+Fee Paid: 9.358369807620463 USD
+Profit: 0.29129 USD
+```
+
+## Quit Market
+Close all positions in the specific market only if the market is closed and no longer active. If market is active, please use the "close" command.
+
+```bash
+perp quit <base_token_address>
+
+#Output
+Closed all vBTC positions for 1948.234556321223459 USD
+```
 
 #### To Do
 

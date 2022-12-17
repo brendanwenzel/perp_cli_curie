@@ -18,16 +18,18 @@ pub enum SubCommand {
     Portfolio(PortfolioCommand),
     /// Use this command to find information about liquidity pools
     Amm(AmmCommand),
-    // /// Verify Function Data
-    // Verify(VerifyCommand)
-    /// Close all positions in specific market 
-    Quit(QuitCommand),
     /// List all base token symbols and addresses
     Tokens(TokensCommand),
     /// Deposit new collateral into Perp account
     Deposit(DepositCommand),
     /// Withdraw collateral from Perp account
     Withdraw(WithdrawCommand),
+    /// Close position
+    Close(CloseCommand),
+    /// Open Position
+    Open(OpenCommand),
+    /// Close all positions in a CLOSED market. Can only be used when a market is no longer active. 
+    Quit(QuitCommand),
 }
 
 #[derive(Debug, Args)]
@@ -49,13 +51,6 @@ pub struct PositionCommand {
     #[clap(short, long)]
     /// Limit the amount of blocks to look back for positions
     pub limit: Option<usize>,
-}
-
-#[derive(Debug, Args)]
-/// Close all positions in specific market
-pub struct QuitCommand {
-    /// Base token address to close positions for
-    pub base_token: Option<String>,
 }
 
 #[derive(Debug, Args)]
@@ -99,11 +94,37 @@ pub struct WithdrawCommand {
     pub eth: Option<f64>,
 }
 
-// #[derive(Debug, Args)]
-// /// Verify Command
-// pub struct VerifyCommand {
-//     /// Contract address to send the byte code
-//     pub contract_address: String,
-//     /// Byte code 
-//     pub byte_code: String,
-// }
+#[derive(Debug, Args)]
+/// Open Position Command
+pub struct OpenCommand {
+    #[clap(short, long, action(ArgAction::SetTrue))]
+    /// Use this flag to open a long position
+    pub long: Option<bool>,
+    #[clap(short, long, action(ArgAction::SetTrue))]
+    /// Use this flag to open a short position
+    pub short: Option<bool>,
+    /// Base token address
+    pub token: String,
+    #[clap(short, long, action(ArgAction::SetTrue))]
+    /// Use this flag to specify amount IN (vUSD)
+    pub input: Option<bool>,
+    #[clap(short, long, action(ArgAction::SetTrue))]
+    /// Use this flag to specify amount OUT (Base Token)
+    pub output: Option<bool>,
+    /// Amount to buy in decimals. Will convert to Wei in backend.
+    pub amount: f64,
+}
+
+#[derive(Debug, Args)]
+/// Close Position Command
+pub struct CloseCommand {
+    /// Base token address
+    pub token: String,
+}
+
+#[derive(Debug, Args)]
+/// Close all positions in a CLOSED market. Can only be used when a market is no longer active.
+pub struct QuitCommand {
+    /// Base token address to close positions for
+    pub base_token: String,
+}

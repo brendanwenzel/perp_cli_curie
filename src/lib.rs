@@ -40,7 +40,13 @@ pub mod deposit;
 /// Withdraw Command
 pub mod withdraw;
 
+/// Open Position
+pub mod open;
+
+/// Close Position
+pub mod close;
+
 /// Re-export a prelude
 pub mod prelude {
-    pub use super::{abis::*, amm::*, deposit::*, withdraw::*, args::*, position::*, portfolio::*, quit::*, address_list::*, contracts::*, utils::*};
+    pub use super::{abis::*, amm::*, deposit::*, withdraw::*, open::*, close::*, args::*, position::*, portfolio::*, quit::*, address_list::*, contracts::*, utils::*};
 }
