@@ -10,6 +10,8 @@ Suggested features are always welcome as well.
 
 ## Installation
 
+In order to test this tool, you need to install Rust and clone this repository.
+
 Add a .env file to the main folder with the following parameters:
 
 ```env
@@ -18,6 +20,13 @@ RPC_URL_WSS=
 CHAIN_ID=
 PRIVATE_KEY=
 ```
+
+From the repo folder, you can replace any of the "perp" commands with:
+
+```bash
+cargo run [position | portfolio | open | deposit]
+```
+Take advantage of the --help flag to provide information about any commands.
 
 ## Show Positions
 
