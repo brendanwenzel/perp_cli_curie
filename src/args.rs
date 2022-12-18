@@ -57,7 +57,7 @@ pub struct PositionCommand {
 /// Portfolio Command
 pub struct PortfolioCommand {
     /// The address of the trader
-    pub trader_address: String,
+    pub trader_address: Option<String>,
 }
 
 #[derive(Debug, Args)]

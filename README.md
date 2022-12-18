@@ -69,6 +69,9 @@ perp position
 ```
 
 ## Show Portfolio
+This will show the portfolio for any given trader address.
+
+If you do not supply a trader address, the address attached to the private key being used will be the default address.
 
 ```bash 
 perp portfolio <trader_address>
@@ -76,6 +79,7 @@ perp portfolio <trader_address>
 ### Example
 
 ```bash
+Trader Address: 0xf39fd...92266
 Account Value: 225124.820137 USD
 Unrealized PnL: -9416.638379665977041880 USD
 
@@ -222,7 +226,7 @@ FRAX: 0x2e3d870790dc77a83dd1d18184acc7439a53f475
 ```
 
 ```bash
-perp deposit --eth 1.529
+perp deposit --eth 1.39183
 
 #Output 
 Deposited 1.39183 ETH 
@@ -336,13 +340,5 @@ Closed all vBTC positions for 1948.234556321223459 USD
 #### To Do
 
 - Buffer the print line statements to output all at the same time
-- Add addresss JSON with reqwest to always return new addresses
-- Add configuration file to setup CLI options
-  - Network Toggle
-    - Mainnet
-    - Testnet 
-  - Default Address
-- Option handling for portfolio
-  - perp portfolio 
-    - Returns portfolio for default address
 - Add Market Price with slot0 function to AMM pairs data
+- Add limit orders to open command

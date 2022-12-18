@@ -1,12 +1,11 @@
 use ethers::prelude::*;
-use crate::{address_list, args::OpenCommand, utils};
+use crate::{address_list, contracts, args::OpenCommand};
+use crate::prelude::{OpenPositionParams};
 use serde::Serialize;
 
 #[tokio::main]
 /// The function to process the Open command
 pub async fn process(args: OpenCommand) {
-
-    abigen!(ClearingHouseContract, "src/abis/IClearingHouse.json");
 
     #[derive(Clone, Debug, EthEvent, Serialize)]
     struct PositionChanged {
@@ -34,6 +33,11 @@ pub async fn process(args: OpenCommand) {
     if args.input == Some(false) && args.output == Some(false) {eprintln!("Please specify either --input or --output. Use --help to see more information.");}
     if args.input == Some(true) && args.output == Some(true) {eprintln!("Please specify only one: --input or --output. Use --help to see more information.");}
 
+    let contract = contracts::get_clearing_house().await;
+    let mut base_symbol: String = String::new();
+    let token_addresses = address_list::get_token_addresses().await;
+    let mut _direction = String::new();
+
     let open_position_params = OpenPositionParams {
         base_token: args.token.parse::<Address>().unwrap(),
         is_base_to_quote: if args.short == Some(true) {true} else {false},
@@ -45,13 +49,6 @@ pub async fn process(args: OpenCommand) {
         referral_code: H256::zero().to_fixed_bytes(),
     };
 
-    let http_provider = utils::get_http_provider().expect("Failed");
-    let client = utils::create_http_client(http_provider).expect("Failed");
-    let clearing_house_address = address_list::get_clearing_house().parse::<Address>().unwrap();
-    let contract = ClearingHouseContract::new(clearing_house_address, client);
-    let mut base_symbol: String = String::new();
-    let token_addresses = address_list::get_token_addresses();
-    let mut _direction = String::new();
     if open_position_params.is_base_to_quote == false {_direction = "LONG".to_string();} else {_direction = "SHORT".to_string();}
     for (key, val) in token_addresses {
         if val != open_position_params.base_token {continue;}
@@ -85,8 +82,6 @@ pub async fn process(args: OpenCommand) {
     println!("Position Size: {} {}", position_size_float, base_symbol);
     println!("Avg Price: {} USD", avg_price.abs());
     println!("Fee Paid: {} USD", ethers::utils::format_units(logs[0].fee, "ether").unwrap().parse::<f64>().unwrap());
-    println!("");
-    // println!("New Open Position Size: {}", ethers::utils::format_units(logs[0].open_notional, "ether").unwrap().parse::<f64>().unwrap());
     println!("");
     
 }

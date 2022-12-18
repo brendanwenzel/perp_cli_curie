@@ -6,11 +6,8 @@ use ethers::prelude::*;
 #[tokio::main]
 /// Process deposit requests
 pub async fn process(args: DepositCommand) {
-    let http_provider = utils::get_http_provider().expect("Failed");
-    let client = utils::create_http_client(http_provider.clone()).expect("Failed");
-    let vault_contract = contracts::get_vault(&client);
-    let zero_address = String::from("0x0000000000000000000000000000000000000000").parse::<Address>().unwrap();
-
+    let client = utils::create_http_client().expect("Failed");
+    let vault_contract = contracts::get_vault().await;
     let collaterals = address_list::get_collateral_tokens();
 
     if args.token == None && args.amount == None && args.eth == None {
@@ -18,7 +15,7 @@ pub async fn process(args: DepositCommand) {
         eprintln!("");
     }
 
-    let mut token_address = zero_address;
+    let mut token_address = Address::zero();
     let mut deposit_amount = U256::zero();
     let mut token_symbol = String::new();
 
@@ -37,13 +34,12 @@ pub async fn process(args: DepositCommand) {
         None => {}
     }
 
-    let base_contract = contracts::get_base_contract(&client, token_address);
+    let base_contract = contracts::get_base_contract(token_address);
 
     match args.amount {
         Some(amount) => { 
             let decimals = base_contract
-               .method::<_, u8> ("decimals", ())
-               .expect("Failed")
+               .decimals()
                .call()
                .await
                .expect("Failed to get decimals");
@@ -56,8 +52,7 @@ pub async fn process(args: DepositCommand) {
         Some(eth) => {
             let amount: U256 = ethers::utils::parse_units(eth, "ether").unwrap().into();
             let data = vault_contract
-               .method::<_, ()> ("depositEther", ())
-               .unwrap()
+               .deposit_ether()
                .calldata()
                .unwrap();
 
@@ -71,10 +66,9 @@ pub async fn process(args: DepositCommand) {
         None => {}
     }
 
-    if token_address != zero_address && args.amount != None && args.eth == None {
+    if token_address != Address::zero() && args.amount != None && args.eth == None {
         let deposit: TransactionReceipt = vault_contract
-            .method::<_, ()> ("deposit", (token_address, deposit_amount))
-            .expect("Couldn't send transaction")
+            .deposit(token_address, deposit_amount)
             .send()
             .await
             .expect("Failed")

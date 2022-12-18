@@ -58,12 +58,13 @@ pub fn get_wallet() -> Result<LocalWallet> {
 }
 
 /// Creates a client from a provider
-pub fn create_http_client(p: Provider<Http>) -> Result<Arc<SignerMiddleware<Provider<Http>, LocalWallet>>> {
+pub fn create_http_client() -> Result<Arc<SignerMiddleware<Provider<Http>, LocalWallet>>> {
     let wallet = get_wallet()?;
+    let provider = get_http_provider().unwrap();
     let chain_id: u64 = std::env::var("CHAIN_ID")
         .map_err(|_| eyre::eyre!("Required environment variable \"RPC_URL\" not set - get_http_provider"))?
         .parse::<u64>()
         .unwrap();
-    let client = SignerMiddleware::new(p, wallet.with_chain_id(chain_id));
+    let client = SignerMiddleware::new(provider, wallet.with_chain_id(chain_id));
     Ok(Arc::new(client))
 }

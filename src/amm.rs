@@ -1,47 +1,40 @@
 use crate::args::AmmCommand;
-use crate::{contracts, address_list, utils};
+use crate::{contracts, address_list};
 use ethers::prelude::*;
 
 /// Processing theh AMM Command
 #[tokio::main]
 pub async fn process(args: AmmCommand) {
-    let pools = address_list::get_pools();
+    let pools = address_list::get_pools().await;
     let pools_iter = pools.iter();
-
-    let http_provider = utils::get_http_provider().expect("Failed");
-    let client = utils::create_http_client(http_provider.clone()).expect("Failed");
 
     if args.search_parameter == None && args.short == Some(false) {
         println!("");
         for pool in pools_iter.clone() {
-            let contract = contracts::get_base_contract(&client, pool.base_address.parse::<Address>().expect("Failed to make Address"));
-            let quote_contract = contracts::get_quote_contract(&client, pool.quote_address.parse::<Address>().expect("Failed"));
-            let _pool_contract = contracts::get_pool_contract(&client, pool.address.parse::<Address>().expect("Failed"));
+            let contract = contracts::get_base_contract(pool.base_address.parse::<Address>().expect("Failed to make Address"));
+            let quote_contract = contracts::get_quote_contract(pool.quote_address.parse::<Address>().expect("Failed"));
+
             let index_price = contract
-                .method::<_, U256>("getIndexPrice", U256::zero())
-                .expect("Invalid Address")
+                .get_index_price(U256::zero())
                 .call()
                 .await
                 .expect("Failed to Pull Account Value");
             let format_index_price = ethers::utils::format_units(index_price, 18).expect("Failed to Format Index Price");
 
             let price_feed = contract
-               .method::<_, Address>("getPriceFeed", ())
-               .expect("Failed to get price feed")
+               .get_price_feed()
                .call()
                .await
                .expect("Failed to get price feed");
 
             let base_asset_reserve = contract
-               .method::<_, U256>("balanceOf", pool.address.parse::<Address>().expect("Failed"))
-               .expect("Invalid Method")
+               .balance_of(pool.address.parse::<Address>().unwrap())
                .call()
                .await
                .expect("Failed");
 
             let quote_asset_reserve = quote_contract
-               .method::<_, U256>("balanceOf", pool.address.parse::<Address>().expect("Failed"))
-               .expect("Invalid Method")
+               .balance_of(pool.address.parse::<Address>().unwrap())
                .call()
                .await
                .expect("Failed");
@@ -74,33 +67,29 @@ pub async fn process(args: AmmCommand) {
             println!("");
         for pool in pools_iter.clone() {
             if pool.address != value && pool.base_address != value && pool.base_symbol != value {continue;}
-            let contract = contracts::get_base_contract(&client, pool.base_address.parse::<Address>().expect("Failed to make Address"));
-            let quote_contract = contracts::get_base_contract(&client, pool.quote_address.parse::<Address>().expect("Failed"));
+            let contract = contracts::get_base_contract(pool.base_address.parse::<Address>().expect("Failed to make Address"));
+            let quote_contract = contracts::get_base_contract(pool.quote_address.parse::<Address>().expect("Failed"));
             let index_price = contract
-                .method::<_, U256>("getIndexPrice", U256::zero())
-                .expect("Invalid Address")
+                .get_index_price(U256::zero())
                 .call()
                 .await
                 .expect("Failed to Pull Account Value");
             let format_index_price = ethers::utils::format_units(index_price, 18).expect("Failed to Format Index Price");
 
             let price_feed = contract
-               .method::<_, Address>("getPriceFeed", ())
-               .expect("Failed to get price feed")
+               .get_price_feed()
                .call()
                .await
                .expect("Failed to get price feed");
 
             let base_asset_reserve = contract
-               .method::<_, U256>("balanceOf", pool.address.parse::<Address>().expect("Failed"))
-               .expect("Invalid Method")
+               .balance_of(pool.address.parse::<Address>().unwrap())
                .call()
                .await
                .expect("Failed");
 
             let quote_asset_reserve = quote_contract
-               .method::<_, U256>("balanceOf", pool.address.parse::<Address>().expect("Failed"))
-               .expect("Invalid Method")
+               .balance_of(pool.address.parse::<Address>().unwrap())
                .call()
                .await
                .expect("Failed");

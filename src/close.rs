@@ -1,12 +1,10 @@
-use crate::{args::CloseCommand, address_list, utils};
+use crate::{args::CloseCommand, address_list, prelude::ClosePositionParams, contracts};
 use serde::Serialize;
 use ethers::prelude::*;
 
 #[tokio::main]
 /// The function to process the Close command
 pub async fn process(args: CloseCommand) {
-    
-    abigen!(ClearingHouseContract, "src/abis/IClearingHouse.json");
 
     #[derive(Clone, Debug, EthEvent, Serialize)]
     struct PositionChanged {
@@ -36,12 +34,9 @@ pub async fn process(args: CloseCommand) {
         referral_code: H256::zero().to_fixed_bytes(),
     };
 
-    let http_provider = utils::get_http_provider().expect("Failed");
-    let client = utils::create_http_client(http_provider).expect("Failed");
-    let clearing_house_address = address_list::get_clearing_house().parse::<Address>().unwrap();
-    let contract = ClearingHouseContract::new(clearing_house_address, client);
+    let contract = contracts::get_clearing_house().await;
     let mut base_symbol: String = String::new();
-    let token_addresses = address_list::get_token_addresses();
+    let token_addresses = address_list::get_token_addresses().await;
     let mut _direction = String::new();
     for (key, val) in token_addresses {
         if val != close_position_params.base_token {continue;}
@@ -68,7 +63,7 @@ pub async fn process(args: CloseCommand) {
 
     println!("");
     println!("========================");
-    println!("== CLOSING {} ==", base_symbol);
+    println!("==== CLOSING {} ====", base_symbol);
     println!("========================");
     println!("");
     println!("Transaction: {:#?}", tx_receipt.transaction_hash);

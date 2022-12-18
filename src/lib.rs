@@ -1,5 +1,5 @@
 #![doc = include_str!("../README.md")]
-#![warn(missing_docs)]
+// #![warn(missing_docs)]
 #![warn(unused_extern_crates)]
 #![forbid(unsafe_code)]
 #![forbid(where_clauses_object_safety)]
@@ -9,9 +9,6 @@ pub mod utils;
 
 /// Contract Instances
 pub mod contracts;
-
-/// ABIs
-pub mod abis;
 
 /// Quit
 pub mod quit;
@@ -48,5 +45,5 @@ pub mod close;
 
 /// Re-export a prelude
 pub mod prelude {
-    pub use super::{abis::*, amm::*, deposit::*, withdraw::*, open::*, close::*, args::*, position::*, portfolio::*, quit::*, address_list::*, contracts::*, utils::*};
+    pub use super::{amm::*, deposit::*, withdraw::*, open::*, close::*, args::*, position::*, portfolio::*, quit::*, address_list::*, contracts::*, utils::*};
 }

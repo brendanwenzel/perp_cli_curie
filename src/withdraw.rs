@@ -1,16 +1,12 @@
 use crate::prelude::{WithdrawCommand};
 use ethers::types::Address;
-use crate::{address_list, contracts, utils};
+use crate::{address_list, contracts};
 use ethers::prelude::*;
 
 #[tokio::main]
 /// Process withdraw requests
 pub async fn process(args: WithdrawCommand) {
-    let http_provider = utils::get_http_provider().expect("Failed");
-    let client = utils::create_http_client(http_provider.clone()).expect("Failed");
-    let vault_contract = contracts::get_vault(&client);
-    let zero_address = String::from("0x0000000000000000000000000000000000000000").parse::<Address>().unwrap();
-
+    let vault_contract = contracts::get_vault().await;
     let collaterals = address_list::get_collateral_tokens();
 
     if args.token == None && args.amount == None && args.eth == None {
@@ -18,7 +14,7 @@ pub async fn process(args: WithdrawCommand) {
         eprintln!("");
     }
 
-    let mut token_address = zero_address;
+    let mut token_address = Address::zero();
     let mut withdraw_amount = U256::zero();
     let mut token_symbol = String::new();
 
@@ -37,13 +33,12 @@ pub async fn process(args: WithdrawCommand) {
         None => {}
     }
 
-    let base_contract = contracts::get_base_contract(&client, token_address);
+    let base_contract = contracts::get_base_contract(token_address);
 
     match args.amount {
         Some(amount) => { 
             let decimals = base_contract
-               .method::<_, u8> ("decimals", ())
-               .expect("Failed")
+               .decimals()
                .call()
                .await
                .expect("Failed to get decimals");
@@ -56,8 +51,7 @@ pub async fn process(args: WithdrawCommand) {
         Some(eth) => {
             let amount: U256 = ethers::utils::parse_units(eth, "ether").unwrap().into();
             let tx = vault_contract
-               .method::<_, ()> ("withdrawEther", amount)
-               .expect("Couldn't Send tx")
+               .withdraw_ether(amount)
                .send()
                .await
                .expect("Failed")
@@ -70,10 +64,9 @@ pub async fn process(args: WithdrawCommand) {
         None => {}
     }
 
-    if token_address != zero_address && args.amount != None && args.eth == None {
+    if token_address != Address::zero() && args.amount != None && args.eth == None {
         let withdraw: TransactionReceipt = vault_contract
-            .method::<_, ()> ("withdraw", (token_address, withdraw_amount))
-            .expect("Couldn't send transaction")
+            .withdraw(token_address, withdraw_amount)
             .send()
             .await
             .expect("Failed")

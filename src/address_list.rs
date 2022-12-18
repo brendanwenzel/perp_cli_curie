@@ -1,20 +1,6 @@
-#[path = "./abis/IAddressList.rs"]
-mod address_list;
-
-use ethers::{types::Address};
+use ethers::types::Address;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-
-/// Contract Addresses
-// #[derive(Debug, Serialize, Deserialize)]
-// pub struct ContractAddresses {
-//     /// AccountBalance
-//     pub account_balance_address: Address,
-//     /// ClearingHouse
-//     pub clearing_house_address: Address,
-//     /// Base Token
-//     pub vault_address: Address,
-// }
+use std::{collections::HashMap};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 /// Contract Information
@@ -83,51 +69,60 @@ pub struct AddressList {
 }
 
 /// List of all Addresses for Optimism
-pub fn address_list() -> String {
-    return address_list::i_addresses_json();
+pub async fn address_list() -> String {
+    let address_json = reqwest::get("https://metadata.perp.exchange/v2/optimism.json").await.unwrap().text().await.unwrap();
+    address_json
 }
 
 /// Find an Address
-fn init_data() -> AddressList {
-    let json_original: String = address_list();
+async fn init_data() -> AddressList {
+    let json_original = address_list().await;
     let address_data: AddressList = serde_json::from_str(&json_original).expect("Not Valid JSON");
     address_data 
 }
 
 /// List of Liquidity Pools
-pub fn get_pools() -> Vec<Pools> {
-    return init_data().pools;
+pub async fn get_pools() -> Vec<Pools> {
+    let init_data = init_data().await;
+    init_data.pools
 }
 
 /// Contracts
-pub fn get_contracts() -> HashMap<String, ContractData> {
-    return init_data().contracts;
+pub async fn get_contracts() -> HashMap<String, ContractData> {
+    let init_data = init_data().await;
+    init_data.contracts
 }
 
 /// Vault Address as a String
-pub fn get_vault() -> String {
-    let contracts = get_contracts();
+pub async fn get_vault() -> String {
+    let contracts = get_contracts().await;
     let contract_data = contracts["Vault"].clone();
     return contract_data.address;
 }
 
 /// Account Balance Address as a String
-pub fn get_account_balance() -> String {
-    let contracts = get_contracts();
+pub async fn get_account_balance() -> String {
+    let contracts = get_contracts().await;
     let contract_data = contracts["AccountBalance"].clone();
     return contract_data.address;
 }
 
 /// Clearing House Address as a String
-pub fn get_clearing_house() -> String {
-    let contracts = get_contracts();
+pub async fn get_clearing_house() -> String {
+    let contracts = get_contracts().await;
     let contract_data = contracts["ClearingHouse"].clone();
     return contract_data.address;
 }
 
+/// Perp Portal Address
+pub fn get_perp_portal() -> Address {
+    let contract_data = String::from("0xa18fa074a2A5B01E69a35771E709553af4676558").parse::<Address>().unwrap();
+    contract_data
+}
+
 /// Contract Addresses
-pub fn get_contract_addresses() -> HashMap<String, Address> {
-    let contracts = get_contracts();
+pub async fn get_contract_addresses() -> HashMap<String, Address> {
+    let contracts = get_contracts().await;
     let mut contract_addresses : HashMap<String, Address> = HashMap::new();
     for (key, value) in contracts {
         // if value.name == String::from("contracts/BaseToken.sol:BaseToken") || value.name == String::from("contracts/ChainlinkPriceFeedV2.sol:ChainlinkPriceFeedV2") {continue;}
@@ -140,8 +135,8 @@ pub fn get_contract_addresses() -> HashMap<String, Address> {
 }
 
 /// Token Addresses
-pub fn get_token_addresses() -> HashMap<String, Address> {
-    let contracts = get_contracts();
+pub async fn get_token_addresses() -> HashMap<String, Address> {
+    let contracts = get_contracts().await;
     let mut token_addresses: HashMap<String, Address> = HashMap::new();
     for (key, val) in contracts {
     if val.name == String::from("contracts/BaseToken.sol:BaseToken") {
@@ -167,18 +162,3 @@ pub fn get_collateral_tokens() -> HashMap<String, Address> {
     );
     collaterals
 }
-
-// /// Contract Addresses
-// pub fn contracts() -> ContractAddresses {
-//     ContractAddresses {
-//         account_balance_address: get_account_balance()
-//             .parse::<Address>()
-//             .expect("fail"),
-//         clearing_house_address: "0x82ac2CE43e33683c58BE4cDc40975E73aA50f459"
-//             .parse::<Address>()
-//             .expect("fail"),
-//         vault_address: get_vault()
-//             .parse::<Address>()
-//             .expect("failed making address"),
-//     }
-// }

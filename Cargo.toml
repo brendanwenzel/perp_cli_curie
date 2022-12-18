@@ -4,8 +4,10 @@ version = "0.0.1"
 edition = "2021"
 license = "MIT"
 description = "CLI for Perpetual Protocol v2 Curie built with Rust"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+readme = "README.md"
+repository = "https://github.com/brendanwenzel/perp_cli_curie"
+homepage = "https://perp.com"
+keywords = ["cli", "perps", "trading", "rust"]
 
 [dependencies]
 clap = { version = "4.0.29", features = ["derive"] }
