@@ -12,11 +12,11 @@ pub struct PerpArgs{
 #[derive(Debug, Subcommand)]
 /// Which Command should we parse?
 pub enum SubCommand {
-    /// Use this command for information on specific positions
+    /// Information on most recent position changes
     Position(PositionCommand),
-    /// Use this command for a list of all current positions and assets for a wallet
+    /// List of all current positions and assets for a wallet
     Portfolio(PortfolioCommand),
-    /// Use this command to find information about liquidity pools
+    /// Find information about liquidity pools
     Amm(AmmCommand),
     /// List all base token symbols and addresses
     Tokens(TokensCommand),

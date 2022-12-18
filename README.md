@@ -24,7 +24,7 @@ PRIVATE_KEY=
 From the repo folder, you can replace any of the "perp" commands with:
 
 ```bash
-cargo run [position | portfolio | open | deposit]
+cargo run [position | portfolio | open | deposit...]
 ```
 Take advantage of the --help flag to provide information about any commands.
 
