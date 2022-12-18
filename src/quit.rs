@@ -2,6 +2,7 @@ use crate::args::QuitCommand;
 use crate::{address_list, contracts, utils};
 use ethers::prelude::*;
 use serde::Serialize;
+use eyre::Result;
 
 #[derive(Clone, EthEvent, Serialize, Debug)]
 struct QuitMarket {
@@ -11,10 +12,10 @@ struct QuitMarket {
 
 #[tokio::main]
 /// Process the request to quit market.
-pub async fn process(args: QuitCommand) {
-    let signer = utils::get_wallet().unwrap();
+pub async fn process(args: QuitCommand) -> Result<()> {
+    let signer = utils::get_wallet()?;
     let trader_address = signer.address();
-    let mut token_address = if args.token.len() == 42 { args.token.parse::<Address>().unwrap() } else { Address::zero() };
+    let mut token_address = if args.token.len() == 42 { args.token.parse::<Address>()? } else { Address::zero() };
     let contract = contracts::get_clearing_house().await;
     let token_addresses = address_list::get_token_addresses().await;
 
@@ -36,9 +37,9 @@ pub async fn process(args: QuitCommand) {
         base_symbol = key;
     }
 
-    let quit_market = contract.quit_market(trader_address, token_address).send().await.expect("Failed").await.expect("Failed");
+    let quit_market = contract.quit_market(trader_address, token_address).send().await?.await?;
 
     println!("");
     println!("Closed all {} positions: {:?}", base_symbol, quit_market);
-
+Ok(())
 }

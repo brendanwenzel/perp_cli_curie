@@ -2,10 +2,11 @@ use ethers::prelude::*;
 use crate::{address_list, contracts, args::OpenCommand};
 use crate::prelude::{OpenPositionParams};
 use serde::Serialize;
+use eyre::Result;
 
 #[tokio::main]
 /// The function to process the Open command
-pub async fn process(args: OpenCommand) {
+pub async fn process(args: OpenCommand) -> Result<()> {
 
     #[derive(Clone, Debug, EthEvent, Serialize)]
     struct PositionChanged {
@@ -37,7 +38,7 @@ pub async fn process(args: OpenCommand) {
     let mut base_symbol: String = String::new();
     let token_addresses = address_list::get_token_addresses().await;
 
-    let mut base_token_address = if args.token.len() == 42 { args.token.parse::<Address>().unwrap() } else { Address::zero() };
+    let mut base_token_address = if args.token.len() == 42 { args.token.parse::<Address>()? } else { Address::zero() };
 
     if args.token.len() < 41 {
         for (key, val) in token_addresses.clone() {
@@ -64,21 +65,20 @@ pub async fn process(args: OpenCommand) {
 
     for (key, val) in token_addresses {
         if val != open_position_params.base_token {continue;}
-        base_symbol = key.parse::<String>().unwrap();
+        base_symbol = key.parse::<String>()?;
         break;
         }
 
-    let tx = contract.open_position(open_position_params).send().await.expect("Failed").await.expect("Failed");
+    let tx = contract.open_position(open_position_params).send().await?.await?;
     let tx_receipt = tx.unwrap();
     let logs: Vec<PositionChanged> = contract
         .event()
         .from_block(tx_receipt.block_number.unwrap())
         .query()
-        .await
-        .expect("Failed");
+        .await?;
 
-    let position_size = ethers::utils::format_units(logs[0].exchanged_position_size, "ether").unwrap().parse::<f64>().unwrap();
-    let position_notional = ethers::utils::format_units(logs[0].exchanged_position_notional, "ether").unwrap().parse::<f64>().unwrap();
+    let position_size = ethers::utils::format_units(logs[0].exchanged_position_size, "ether")?.parse::<f64>()?;
+    let position_notional = ethers::utils::format_units(logs[0].exchanged_position_notional, "ether")?.parse::<f64>()?;
     let avg_price = position_notional / position_size;
 
     println!("");
@@ -89,7 +89,7 @@ pub async fn process(args: OpenCommand) {
     println!("Transaction: {:#?}", tx_receipt.transaction_hash);
     println!("Position Size: {} {}", position_size, base_symbol);
     println!("Avg Price: {} USD", avg_price.abs());
-    println!("Fee Paid: {} USD", ethers::utils::format_units(logs[0].fee, "ether").unwrap().parse::<f64>().unwrap());
+    println!("Fee Paid: {} USD", ethers::utils::format_units(logs[0].fee, "ether")?.parse::<f64>()?);
     println!("");
-    
+    Ok(())
 }
