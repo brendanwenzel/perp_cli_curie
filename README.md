@@ -348,4 +348,5 @@ Closed all vBTC positions for 1948.234556321223459 USD
 
 - Buffer the print line statements to output all at the same time
 - Add Market Price with slot0 function to AMM pairs data
-- Add limit orders to open command
+- Add limit/bound orders to open command
+- Threading non-dependent contract calls
