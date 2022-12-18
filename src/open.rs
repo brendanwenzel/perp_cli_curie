@@ -36,10 +36,23 @@ pub async fn process(args: OpenCommand) {
     let contract = contracts::get_clearing_house().await;
     let mut base_symbol: String = String::new();
     let token_addresses = address_list::get_token_addresses().await;
-    let mut _direction = String::new();
+
+    let mut base_token_address = if args.token.len() == 42 { args.token.parse::<Address>().unwrap() } else { Address::zero() };
+
+    if args.token.len() < 41 {
+        for (key, val) in token_addresses.clone() {
+            let mut chars = key.chars();
+            chars.next();
+            let key_without_v = chars.as_str();
+            if key_without_v == args.token { base_token_address = val; break; }
+            if key != args.token { continue; }
+            base_token_address = val;
+            break;
+        }
+    }
 
     let open_position_params = OpenPositionParams {
-        base_token: args.token.parse::<Address>().unwrap(),
+        base_token: base_token_address,
         is_base_to_quote: if args.short == Some(true) {true} else {false},
         is_exact_input: if args.input == Some(true) {true} else {false},
         amount: ethers::utils::parse_units(args.amount, "ether").unwrap().into(),
@@ -49,7 +62,6 @@ pub async fn process(args: OpenCommand) {
         referral_code: H256::zero().to_fixed_bytes(),
     };
 
-    if open_position_params.is_base_to_quote == false {_direction = "LONG".to_string();} else {_direction = "SHORT".to_string();}
     for (key, val) in token_addresses {
         if val != open_position_params.base_token {continue;}
         base_symbol = key.parse::<String>().unwrap();
@@ -65,21 +77,17 @@ pub async fn process(args: OpenCommand) {
         .await
         .expect("Failed");
 
-    let position_size = ethers::utils::format_units(logs[0].exchanged_position_size, "ether").unwrap();
-    let position_size_float = position_size.parse::<f64>().unwrap();
-
-    let position_notional = ethers::utils::format_units(logs[0].exchanged_position_notional, "ether").unwrap();
-    let position_notional_float = position_notional.parse::<f64>().unwrap();
-
-    let avg_price = position_notional_float / position_size_float;
+    let position_size = ethers::utils::format_units(logs[0].exchanged_position_size, "ether").unwrap().parse::<f64>().unwrap();
+    let position_notional = ethers::utils::format_units(logs[0].exchanged_position_notional, "ether").unwrap().parse::<f64>().unwrap();
+    let avg_price = position_notional / position_size;
 
     println!("");
     println!("========================");
-    println!("== New {} on {} ==", _direction, base_symbol);
+    println!("== New {} on {} ==", if position_size > 0.0 {"LONG"} else {"SHORT"}, base_symbol);
     println!("========================");
     println!("");
     println!("Transaction: {:#?}", tx_receipt.transaction_hash);
-    println!("Position Size: {} {}", position_size_float, base_symbol);
+    println!("Position Size: {} {}", position_size, base_symbol);
     println!("Avg Price: {} USD", avg_price.abs());
     println!("Fee Paid: {} USD", ethers::utils::format_units(logs[0].fee, "ether").unwrap().parse::<f64>().unwrap());
     println!("");

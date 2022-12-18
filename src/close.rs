@@ -26,18 +26,32 @@ pub async fn process(args: CloseCommand) {
         sqrt_price_after_x96: U256,
     }
 
+    let contract = contracts::get_clearing_house().await;
+    let mut base_symbol: String = String::new();
+    let token_addresses = address_list::get_token_addresses().await;
+    let mut _direction = String::new();
+    let mut base_token_address = if args.token.len() == 42 { args.token.parse::<Address>().unwrap() } else { Address::zero() };
+
+    if args.token.len() < 41 {
+        for (key, val) in token_addresses.clone() {
+            let mut chars = key.chars();
+            chars.next();
+            let key_without_v = chars.as_str();
+            if key_without_v == args.token { base_token_address = val; break; }
+            if key != args.token { continue; }
+            base_token_address = val;
+            break;
+        }
+    }
+
     let close_position_params = ClosePositionParams {
-        base_token: args.token.parse::<Address>().unwrap(),
+        base_token: base_token_address,
         sqrt_price_limit_x96: U256::zero(),
         opposite_amount_bound: U256::zero(),
         deadline: U256::max_value(),
         referral_code: H256::zero().to_fixed_bytes(),
     };
 
-    let contract = contracts::get_clearing_house().await;
-    let mut base_symbol: String = String::new();
-    let token_addresses = address_list::get_token_addresses().await;
-    let mut _direction = String::new();
     for (key, val) in token_addresses {
         if val != close_position_params.base_token {continue;}
         base_symbol = key.parse::<String>().unwrap();

@@ -280,12 +280,12 @@ Transaction: 0x7c...4ddb9
 
 ## Open a Position
 ```bash
-perp open [--long | --short] <token_address> [--input | --output] <amount>
+perp open [--long | --short] <token> [--input | --output] <amount>
 ```
 
 You must specify either long or short. 
 
-Then the token address for the base token you wish to trade. 
+<token> can be either the base token address OR the base token symbol with or without the v, but must be capitalized properly. For example, vETH or ETH will work. eth or veth will NOT work. 
 
 You must choose whether to specify the input amount or output amount.
 
@@ -293,23 +293,30 @@ For example, if you are longing, input will specify the vUSD in and output will 
 
 The opposite applies for shorting. Input will specify the base token amount in and output will specify the vUSD out.
 
+All orders are currently setup to serve as "Market Orders" with no limit price nor slippage settings.
+
 ### Examples
 ```bash
-perp open --long 0xb6599bd362120dc70d48409b8a08888807050700 --input 5000
+perp open --long BNB --input 5000
 
 #Output
 ========================
 == New LONG on vBNB ==
 ========================
 
-Transaction: 0xd2f55f8412c99c4dc75e3ad23f289fece17d02f922093260856277a1d24672f7
+Transaction: 0xd2ff...2f7
 Position Size: 20.524591260706146 vBNB
 Avg Price: 243.36660041375887 USD
 Fee Paid: 5 USD
 ```
 
 ## Close a Position
-You must specify which market you want to close with the base token's address. You can get the list of base tokens with addresses with the "tokens" command.
+```bash
+perp close <token>
+```
+You must specify which market you want to close with the base token. You can get the list of base tokens with addresses with the "tokens" command.
+
+<token> can be either the base token address OR the base token symbol with or without the v, but must be capitalized properly. For example, vETH or ETH will work. eth or veth will NOT work. 
 
 ### Examples
 ```bash
@@ -328,7 +335,7 @@ Profit: 0.29129 USD
 ```
 
 ## Quit Market
-Close all positions in the specific market only if the market is closed and no longer active. If market is active, please use the "close" command.
+Close all positions in the specific market ONLY if the market is closed and no longer active. If market is active, please use the "close" command.
 
 ```bash
 perp quit <base_token_address>

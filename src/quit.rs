@@ -11,14 +11,26 @@ struct QuitMarket {
 
 #[tokio::main]
 /// Process the request to quit market.
-pub async fn process(token: QuitCommand) {
+pub async fn process(args: QuitCommand) {
     let signer = utils::get_wallet().unwrap();
     let trader_address = signer.address();
-    let token_address = token.base_token.parse::<Address>().unwrap();
+    let mut token_address = if args.token.len() == 42 { args.token.parse::<Address>().unwrap() } else { Address::zero() };
     let contract = contracts::get_clearing_house().await;
+    let token_addresses = address_list::get_token_addresses().await;
+
+    if args.token.len() < 41 {
+        for (key, val) in token_addresses.clone() {
+            let mut chars = key.chars();
+            chars.next();
+            let key_without_v = chars.as_str();
+            if key_without_v == args.token { token_address = val; break; }
+            if key != args.token { continue; }
+            token_address = val;
+            break;
+        }
+    }
 
     let mut base_symbol = String::new();
-    let token_addresses = address_list::get_token_addresses().await;
     for (key, val) in token_addresses {
         if val != token_address {continue;}
         base_symbol = key;

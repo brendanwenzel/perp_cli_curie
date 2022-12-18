@@ -103,13 +103,13 @@ pub struct OpenCommand {
     #[clap(short, long, action(ArgAction::SetTrue))]
     /// Use this flag to open a short position
     pub short: Option<bool>,
-    /// Base token address
+    /// Base token address or symbol
     pub token: String,
     #[clap(short, long, action(ArgAction::SetTrue))]
-    /// Use this flag to specify amount IN (vUSD)
+    /// Use this flag to specify amount IN
     pub input: Option<bool>,
     #[clap(short, long, action(ArgAction::SetTrue))]
-    /// Use this flag to specify amount OUT (Base Token)
+    /// Use this flag to specify amount OUT
     pub output: Option<bool>,
     /// Amount to buy in decimals. Will convert to Wei in backend.
     pub amount: f64,
@@ -118,7 +118,7 @@ pub struct OpenCommand {
 #[derive(Debug, Args)]
 /// Close Position Command
 pub struct CloseCommand {
-    /// Base token address
+    /// Base token address or symbol to trade
     pub token: String,
 }
 
@@ -126,5 +126,5 @@ pub struct CloseCommand {
 /// Close all positions in a CLOSED market. Can only be used when a market is no longer active.
 pub struct QuitCommand {
     /// Base token address to close positions for
-    pub base_token: String,
+    pub token: String,
 }

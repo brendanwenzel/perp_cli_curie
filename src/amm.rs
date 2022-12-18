@@ -11,8 +11,9 @@ pub async fn process(args: AmmCommand) {
     if args.search_parameter == None && args.short == Some(false) {
         println!("");
         for pool in pools_iter.clone() {
-            let contract = contracts::get_base_contract(pool.base_address.parse::<Address>().expect("Failed to make Address"));
-            let quote_contract = contracts::get_quote_contract(pool.quote_address.parse::<Address>().expect("Failed"));
+            let contract = contracts::get_base_contract(pool.base_address.parse::<Address>().unwrap());
+            let quote_contract = contracts::get_quote_contract(pool.quote_address.parse::<Address>().unwrap());
+            // let pool_contract = contracts::get_pool_contract(pool.address.parse::<Address>().unwrap());
 
             let index_price = contract
                 .get_index_price(U256::zero())
@@ -40,18 +41,19 @@ pub async fn process(args: AmmCommand) {
                .expect("Failed");
 
             // let market_price = pool_contract
-            //     .method::<_, Slot0>("slot0", ())
-            //     .expect("Failed to send method")
+            //     .slot_0()
             //     .call()
             //     .await
             //     .expect("Failed");
+
+            // let price = ethers::utils::format_units(market_price.0.pow(U256::from(2)) / U256::from(2).pow(U256::from(192)), "ether").unwrap().parse::<f64>().unwrap();
 
             println!("========================");
             println!("=====  {}/{}  =====", pool.base_symbol, pool.quote_symbol);
             println!("========================");
             println!("- Pool Address: {}", pool.address);
             println!("- Index Price: {}", format_index_price);
-            // println!("- Market Price: {}", market_price);
+            // println!("- Market Price: {}", price);
             // println!("- OpenInterestNotionalCap: {}", open_interest_notional_cap);
             // println!("- OpenInterestNotional: {}", open_interest_notional);
             // println!("- MaxHoldingBaseAsset: {}", max_holding_base_asset);
@@ -69,6 +71,8 @@ pub async fn process(args: AmmCommand) {
             if pool.address != value && pool.base_address != value && pool.base_symbol != value {continue;}
             let contract = contracts::get_base_contract(pool.base_address.parse::<Address>().expect("Failed to make Address"));
             let quote_contract = contracts::get_base_contract(pool.quote_address.parse::<Address>().expect("Failed"));
+            // let pool_contract = contracts::get_pool_contract(pool.address.parse::<Address>().unwrap());
+
             let index_price = contract
                 .get_index_price(U256::zero())
                 .call()
@@ -94,12 +98,20 @@ pub async fn process(args: AmmCommand) {
                .await
                .expect("Failed");
 
+        //     let market_price = pool_contract
+        //        .slot_0()
+        //        .call()
+        //        .await
+        //        .expect("Failed");
+
+        //    let price = ethers::utils::format_units(market_price.0.pow(U256::from(2)) / U256::from(2).pow(U256::from(192)), 6).unwrap().parse::<f64>().unwrap();
+
             println!("========================");
             println!("=====  {}/{}  =====", pool.base_symbol, pool.quote_symbol);
             println!("========================");
             println!("- Pool Address: {}", pool.address);
             println!("- Index Price: {}", format_index_price);
-            // println!("- Market Price: {}", market_price);
+            // println!("- Market Price: {}", price);
             // println!("- OpenInterestNotionalCap: {}", open_interest_notional_cap);
             // println!("- OpenInterestNotional: {}", open_interest_notional);
             // println!("- MaxHoldingBaseAsset: {}", max_holding_base_asset);
