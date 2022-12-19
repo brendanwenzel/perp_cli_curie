@@ -10,7 +10,6 @@ pub fn read_env_vars() -> Result<Vec<(String, String)>> {
     let mut env_vars = Vec::new();
     let keys = vec![
         "RPC_URL",
-        "RPC_URL_WSS",
         "CHAIN_ID",
         "PRIVATE_KEY"
     ];
@@ -29,22 +28,6 @@ pub fn get_http_provider() -> Result<Provider<Http>> {
     let url = std::env::var("RPC_URL")
         .map_err(|_| eyre::eyre!("Required environment variable \"RPC_URL\" not set - get_http_provider"))?;
     Provider::<Http>::try_from(url).map_err(|_| eyre::eyre!("Invalid RPC URL"))
-}
-
-/// Return a Provider for the given Websocket URL
-pub async fn get_ws_provider() -> Result<Provider<Ws>> {
-    dotenv().ok();
-    let url = std::env::var("RPC_URL_WSS")
-        .map_err(|_| eyre::eyre!("Required environment variable \"RPC_URL_WSS\" not set"))?;
-    Provider::<Ws>::connect(&url)
-        .await
-        .map_err(|e| eyre::eyre!("RPC Connection Error: {:?}", e))
-}
-
-/// Create Websocket Client
-pub async fn create_websocket_client() -> Result<Arc<Provider<Ws>>> {
-    let client = get_ws_provider().await?;
-    Ok(Arc::new(client))
 }
 
 /// Construct the searcher wallet

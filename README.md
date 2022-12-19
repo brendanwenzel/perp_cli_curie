@@ -10,23 +10,32 @@ Suggested features are always welcome as well.
 
 ## Installation
 
-In order to test this tool, you need to install Rust and clone this repository.
+### Using Cargo and Git
 
-Add a .env file to the main folder with the following parameters:
+Install Rustup with the instructions at [https://www.rust-lang.org/tools/install](https://www.rust-lang.org/tools/install)
 
-```env
+Clone this repository and install the app:
+
+```bash
+git clone https://github.com/brendanwenzel/perp_cli_curie.git
+cd perp_cli_curie
+cargo install --path .
+```
+
+Add a .env file in the $USER/.cargo/bin with the following parameters:
+
+```
 RPC_URL=
-RPC_URL_WSS=
 CHAIN_ID=
 PRIVATE_KEY=
 ```
-
-From the repo folder, you can replace any of the "perp" commands with:
+The other option is to provide environment variables for each session by passing the following prior to using the CLI:
 
 ```bash
-cargo run [position | portfolio | open | deposit...]
+export RPC_URL="https://alchemylink.com"
+export CHAIN_ID="10"
+export PRIVATE_KEY="asdf...1234"
 ```
-Take advantage of the --help flag to provide information about any commands.
 
 ## Show Positions
 
