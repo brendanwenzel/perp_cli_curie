@@ -10,6 +10,16 @@ Suggested features are always welcome as well.
 
 ## Installation
 
+### Install Binaries on UNIX-Based Systems (Linux/Apple)
+
+Download the latest release of the PERP CLI from the [Release Page](https://github.com/brendanwenzel/perp_cli_curie/releases/tag/v0.1.0)
+
+```bash
+wget https://github.com/brendanwenzel/perp_cli_curie/releases/download/$VERSION/$FILE_NAME
+sudo install $FILE_NAME usr/local/bin/perp
+rm $FILE_NAME
+```
+
 ### Using Cargo and Git
 
 Install Rustup with the instructions at [https://www.rust-lang.org/tools/install](https://www.rust-lang.org/tools/install)
@@ -21,6 +31,8 @@ git clone https://github.com/brendanwenzel/perp_cli_curie.git
 cd perp_cli_curie
 cargo install --path .
 ```
+
+## Environment Variables
 
 Add a .env file in the $USER/.cargo/bin with the following parameters:
 
