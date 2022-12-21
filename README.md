@@ -16,7 +16,7 @@ Download the latest release of the PERP CLI from the [Release Page](https://gith
 
 ```bash
 wget https://github.com/brendanwenzel/perp_cli_curie/releases/download/$VERSION/$FILE_NAME
-sudo install $FILE_NAME usr/local/bin/perp
+sudo install $FILE_NAME /usr/local/bin/perp
 rm $FILE_NAME
 ```
 
@@ -34,7 +34,7 @@ cargo install --path .
 
 ## Environment Variables
 
-Add a .env file in the $USER/.cargo/bin with the following parameters:
+Add a .env file to the same folder as the perp app with the following parameters:
 
 ```
 RPC_URL=
