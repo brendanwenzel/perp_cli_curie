@@ -1,5 +1,7 @@
 # Perpetual Protocol CLI for Perp v2 Curie
 
+<video src="https://youtu.be/HModVxuLO6w" />
+
 This tool is to provide a simple, fast and efficient way to interact Perpetual Protocol contracts from your terminal.
 
 This light-weight interface provides you with most tools you can find on the website.
