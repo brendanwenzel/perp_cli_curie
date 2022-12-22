@@ -1,6 +1,6 @@
 # Perpetual Protocol CLI for Perp v2 Curie
 
-[<img src="https://img.youtube.com/vi/<HModVxuLO6w>/maxresdefault.jpg" width="50%">](https://youtu.be/HModVxuLO6w)
+[<img src="https://img.youtube.com/vi/HModVxuLO6w/maxresdefault.jpg" width="50%">](https://youtu.be/HModVxuLO6w)
 
 This tool is to provide a simple, fast and efficient way to interact Perpetual Protocol contracts from your terminal.
 
