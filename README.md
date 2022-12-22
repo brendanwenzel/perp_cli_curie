@@ -52,7 +52,7 @@ export PRIVATE_KEY="asdf...1234"
 ## Show Positions
 
 ```bash
-perp position [--trader | -t <trader_address>] [--base_token | -b <base_token_address>] [--limit | -l <block_limit_number>]
+perp position [--trader | -t <trader_address>] [--base-token | -b <base_token_address>] [--limit | -l <block_limit_number>]
 ```
 All flags are optional. Default is 250 blocks as a limit.
 
