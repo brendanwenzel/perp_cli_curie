@@ -1,6 +1,6 @@
 use ethers::prelude::*;
 use crate::{address_list, contracts, args::OpenCommand};
-use crate::prelude::{OpenPositionParams};
+use crate::prelude::OpenPositionParams;
 use serde::Serialize;
 use eyre::Result;
 
