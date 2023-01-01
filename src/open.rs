@@ -57,14 +57,11 @@ pub async fn process(args: OpenCommand) -> Result<()> {
     match args.limit {
         Some(limit) => {
             let sqrt_x96 = limit.sqrt();
-            println!("{}", sqrt_x96);
             let q96 = ethers::utils::format_units(U256::from(2).pow(U256::from(96)), 18)?.parse::<f64>()?;
             limit_sqrt = ethers::utils::parse_ether(sqrt_x96 * q96)?;
         },
         None => { }
     }
-
-    println!("{}", limit_sqrt);
 
     let open_position_params = OpenPositionParams {
         base_token: base_token_address,
