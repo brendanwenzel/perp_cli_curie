@@ -52,14 +52,28 @@ pub async fn process(args: OpenCommand) -> Result<()> {
         }
     }
 
+    let mut limit_sqrt = U256::zero();
+
+    match args.limit {
+        Some(limit) => {
+            let sqrt_x96 = limit.sqrt();
+            println!("{}", sqrt_x96);
+            let q96 = ethers::utils::format_units(U256::from(2).pow(U256::from(96)), 18)?.parse::<f64>()?;
+            limit_sqrt = ethers::utils::parse_ether(sqrt_x96 * q96)?;
+        },
+        None => { }
+    }
+
+    println!("{}", limit_sqrt);
+
     let open_position_params = OpenPositionParams {
         base_token: base_token_address,
         is_base_to_quote: if args.short == Some(true) {true} else {false},
         is_exact_input: if args.input == Some(true) {true} else {false},
-        amount: ethers::utils::parse_units(args.amount, "ether").unwrap().into(),
+        amount: ethers::utils::parse_units(args.order_amount, "ether").unwrap().into(),
         opposite_amount_bound: U256::zero(),
         deadline: U256::max_value(),
-        sqrt_price_limit_x96: U256::zero(),
+        sqrt_price_limit_x96: limit_sqrt,
         referral_code: H256::zero().to_fixed_bytes(),
     };
 

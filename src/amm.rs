@@ -17,7 +17,7 @@ pub async fn process(args: AmmCommand) -> Result<()> {
 
         let contract = contracts::get_base_contract(pool.base_address.parse::<Address>()?);
         let quote_contract = contracts::get_base_contract(pool.quote_address.parse::<Address>()?);
-        // let pool_contract = contracts::get_pool_contract(pool.address.parse::<Address>()?);
+        let pool_contract = contracts::get_pool_contract(pool.address.parse::<Address>()?);
 
         let index_price = contract
             .get_index_price(U256::zero())
@@ -40,16 +40,18 @@ pub async fn process(args: AmmCommand) -> Result<()> {
             .call()
             .await?;
 
-    //     let market_price = pool_contract
-    //        .slot_0()
-    //        .call()
-    //        .await?;
-
-    //    let price = ethers::utils::format_units(market_price.0.pow(U256::from(2)) / U256::from(2).pow(U256::from(192)), 6)?.parse::<f64>()?;
+        let sqrt_price = (pool_contract
+           .slot_0()
+           .call()
+           .await?).0;
+           
+        let sqrt_price_float = ethers::utils::format_units(sqrt_price.pow(U256::from(2)), 18)?.parse::<f64>()?;
+        let q96 = ethers::utils::format_units(U256::from(2).pow(U256::from(192)), 18)?.parse::<f64>()?;
+        let market_price = sqrt_price_float / q96;
 
         println!("- Pool Address: {}", pool.address);
         println!("- Index Price: {}", format_index_price);
-        // println!("- Market Price: {}", price);
+        println!("- Market Price: {}", market_price);
         // println!("- OpenInterestNotionalCap: {}", open_interest_notional_cap);
         // println!("- OpenInterestNotional: {}", open_interest_notional);
         // println!("- MaxHoldingBaseAsset: {}", max_holding_base_asset);

@@ -97,10 +97,10 @@ pub struct WithdrawCommand {
 #[derive(Debug, Args)]
 /// Open Position Command
 pub struct OpenCommand {
-    #[clap(short, long, action(ArgAction::SetTrue))]
+    #[clap(long, action(ArgAction::SetTrue))]
     /// Use this flag to open a long position
     pub long: Option<bool>,
-    #[clap(short, long, action(ArgAction::SetTrue))]
+    #[clap(long, action(ArgAction::SetTrue))]
     /// Use this flag to open a short position
     pub short: Option<bool>,
     /// Base token address or symbol
@@ -112,7 +112,10 @@ pub struct OpenCommand {
     /// Use this flag to specify amount OUT
     pub output: Option<bool>,
     /// Amount to buy in decimals. Will convert to Wei in backend.
-    pub amount: f64,
+    pub order_amount: f64,
+    #[clap(long)]
+    /// Will open the order up to the point of hitting this limit
+    pub limit: Option<f64>,
 }
 
 #[derive(Debug, Args)]

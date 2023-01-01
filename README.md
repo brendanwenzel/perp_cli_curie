@@ -303,7 +303,7 @@ Transaction: 0x7c...4ddb9
 
 ## Open a Position
 ```bash
-perp open [--long | --short] <token> [--input | --output] <amount>
+perp open [--long | --short] <token> [--input | --output] <order_amount> [--limit <price>]
 ```
 
 You must specify either long or short. 
@@ -320,7 +320,7 @@ All orders are currently setup to serve as "Market Orders" with no limit price n
 
 ### Examples
 ```bash
-perp open --long BNB --input 5000
+perp open --long BNB --input 5000 --limit 243.5943
 
 #Output
 ========================
