@@ -1,6 +1,7 @@
 #![doc = include_str!("../README.md")]
-// #![warn(missing_docs)]
+#![warn(missing_docs)]
 #![warn(unused_extern_crates)]
+#![warn(clippy::unwrap_used)]
 #![forbid(unsafe_code)]
 #![forbid(where_clauses_object_safety)]
 
@@ -37,13 +38,16 @@ pub mod deposit;
 /// Withdraw Command
 pub mod withdraw;
 
-/// Open Position
+/// This module processes the "open" sub-command
 pub mod open;
 
-/// Close Position
+/// This module processes the "close" sub-command
 pub mod close;
+
+/// Metadata JSON
+pub mod metadata;
 
 /// Re-export a prelude
 pub mod prelude {
-    pub use super::{amm::*, deposit::*, withdraw::*, open::*, close::*, args::*, position::*, portfolio::*, quit::*, address_list::*, contracts::*, utils::*};
+    pub use super::{amm::*, metadata::*, deposit::*, withdraw::*, open::*, close::*, args::*, position::*, portfolio::*, quit::*, address_list::*, contracts::*, utils::*};
 }

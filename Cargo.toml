@@ -10,20 +10,20 @@ homepage = "https://perp.com"
 keywords = ["cli", "perps", "trading", "rust"]
 
 [dependencies]
-clap = { version = "4.0.29", features = ["derive"] }
+clap = { version = "4.0.32", features = ["derive"] }
 dotenv = { version = "0.15.0", features = ["cli"] }
-log = "0.4.0"
-env_logger = "0.9.0"
+log = "0.4.17"
+env_logger = "0.10.0"
 eyre = { version = "0.6" }
-serde = { version = "1.0.104", features = ["derive"] }
-serde_json = "1.0.59"
+serde = { version = "1.0.152", features = ["derive"] }
+serde_json = "1.0.91"
 reqwest = { version = "0.11", features = ["json"] }
 
 # Core
-tokio = { version = "1.0.1", features = ["full"] }
+tokio = { version = "1.23.0", features = ["full"] }
 ethers = { version = "1.0.2", features = [ "abigen", "ws", "rustls" ] }
-ethers-flashbots = "0.10.0"
 
 [lib]
 name = "perpcli_rs"
 path = "src/lib.rs"
+doctest = false

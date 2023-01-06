@@ -16,8 +16,8 @@ pub async fn process(args: QuitCommand) -> Result<()> {
     let signer = utils::get_wallet()?;
     let trader_address = signer.address();
     let mut token_address = if args.token.len() == 42 { args.token.parse::<Address>()? } else { Address::zero() };
-    let contract = contracts::get_clearing_house().await;
-    let token_addresses = address_list::get_token_addresses().await;
+    let contract = contracts::get_clearing_house().await?;
+    let token_addresses = address_list::get_token_addresses().await?;
 
     if args.token.len() < 41 {
         for (key, val) in token_addresses.clone() {

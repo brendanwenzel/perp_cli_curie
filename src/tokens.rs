@@ -5,7 +5,7 @@ use eyre::Result;
 #[tokio::main]
 /// Primary function to process tokens command
 pub async fn process(symbol: TokensCommand) -> Result<()> {
-    let token_addresses = address_list::get_token_addresses().await;
+    let token_addresses = address_list::get_token_addresses().await?;
     println!("");
     for (key, val) in token_addresses {
         match symbol.symbol {

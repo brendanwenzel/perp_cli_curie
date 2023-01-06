@@ -34,9 +34,9 @@ pub async fn process(args: OpenCommand) -> Result<()> {
     if args.input == Some(false) && args.output == Some(false) {eprintln!("Please specify either --input or --output. Use --help to see more information.");}
     if args.input == Some(true) && args.output == Some(true) {eprintln!("Please specify only one: --input or --output. Use --help to see more information.");}
 
-    let contract = contracts::get_clearing_house().await;
+    let contract = contracts::get_clearing_house().await?;
     let mut base_symbol: String = String::new();
-    let token_addresses = address_list::get_token_addresses().await;
+    let token_addresses = address_list::get_token_addresses().await?;
 
     let mut base_token_address = if args.token.len() == 42 { args.token.parse::<Address>()? } else { Address::zero() };
 

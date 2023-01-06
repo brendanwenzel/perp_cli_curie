@@ -63,7 +63,7 @@ pub async fn process(args: PositionCommand) -> Result<()> {
     let block_number = http_provider.get_block_number().await?;
     let target_block = block_number - variables.block_limit;
 
-    let filter = Filter::new().select(target_block..).address(address_list::get_clearing_house().await.parse::<Address>()?).topic0("0x968bc4f738eae0486dc6736c4b427dbafa4acfdf6eaf223337791ddeb3a56247".parse::<H256>()?);
+    let filter = Filter::new().select(target_block..).address(address_list::get_clearing_house().await?.parse::<Address>()?).topic0("0x968bc4f738eae0486dc6736c4b427dbafa4acfdf6eaf223337791ddeb3a56247".parse::<H256>()?);
     let logs = client
         .get_logs(&filter)
         .await?;
@@ -73,7 +73,7 @@ pub async fn process(args: PositionCommand) -> Result<()> {
         if variables.trader != Address::zero() && variables.trader != event.trader { continue; }
         if variables.base_token != Address::zero() && variables.base_token != event.base_token { continue; }
         let mut base_symbol: String = String::new();
-        let token_addresses = address_list::get_token_addresses().await;
+        let token_addresses = address_list::get_token_addresses().await?;
         for (key, val) in token_addresses {
         if val != event.base_token {continue;}
         base_symbol = key.parse::<String>()?;

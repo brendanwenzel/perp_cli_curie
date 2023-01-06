@@ -1,4 +1,4 @@
-use crate::prelude::{WithdrawCommand};
+use crate::prelude::WithdrawCommand;
 use ethers::types::Address;
 use crate::{address_list, contracts};
 use ethers::prelude::*;
@@ -7,8 +7,8 @@ use eyre::Result;
 #[tokio::main]
 /// Process withdraw requests
 pub async fn process(args: WithdrawCommand) -> Result<()> {
-    let vault_contract = contracts::get_vault().await;
-    let collaterals = address_list::get_collateral_tokens();
+    let vault_contract = contracts::get_vault().await?;
+    let collaterals = address_list::get_collateral_tokens()?;
 
     if args.token == None && args.amount == None && args.eth == None {
         for (key, val) in &collaterals { println!("{}: {:?}", key, val); }
@@ -34,7 +34,7 @@ pub async fn process(args: WithdrawCommand) -> Result<()> {
         None => {}
     }
 
-    let base_contract = contracts::get_base_contract(token_address);
+    let base_contract = contracts::get_base_contract(token_address)?;
 
     match args.amount {
         Some(amount) => { 

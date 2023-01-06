@@ -8,8 +8,8 @@ use eyre::Result;
 /// Process deposit requests
 pub async fn process(args: DepositCommand) -> Result<()> {
     let client = utils::create_http_client()?;
-    let vault_contract = contracts::get_vault().await;
-    let collaterals = address_list::get_collateral_tokens();
+    let vault_contract = contracts::get_vault().await?;
+    let collaterals = address_list::get_collateral_tokens()?;
 
     if args.token == None && args.amount == None && args.eth == None {
         for (key, val) in &collaterals { println!("{}: {:?}", key, val); }
@@ -35,7 +35,7 @@ pub async fn process(args: DepositCommand) -> Result<()> {
         None => {}
     }
 
-    let base_contract = contracts::get_base_contract(token_address);
+    let base_contract = contracts::get_base_contract(token_address)?;
 
     match args.amount {
         Some(amount) => { 

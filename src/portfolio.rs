@@ -8,10 +8,10 @@ use eyre::Result;
 pub async fn process(args: PortfolioCommand) -> Result<()> {
 
     let http_provider = utils::get_http_provider()?;
-    let perp_portal_contract = contracts::get_perp_portal();
-    let account_balance_contract = contracts::get_account_balance().await;
-    let vault_contract = contracts::get_vault().await;
-    let clearing_house = contracts::get_clearing_house().await;
+    let perp_portal_contract = contracts::get_perp_portal()?;
+    let account_balance_contract = contracts::get_account_balance().await?;
+    let vault_contract = contracts::get_vault().await?;
+    let clearing_house = contracts::get_clearing_house().await?;
     let mut trader = utils::get_wallet()?.address();
 
     match args.trader_address {
@@ -37,7 +37,7 @@ pub async fn process(args: PortfolioCommand) -> Result<()> {
     let total_value = ethers::utils::format_units(total_account_value, "ether")?.parse::<f64>()?;
     let trader_balance = http_provider.get_balance(trader, None).await?;
     let free_collateral = ethers::utils::format_units(free_collateral_value, 6)?.parse::<f64>()?;
-    let token_addresses = address_list::get_token_addresses().await;
+    let token_addresses = address_list::get_token_addresses().await?;
 
     println!("");
     println!("Trader Address: {:?}", trader);
@@ -52,7 +52,7 @@ pub async fn process(args: PortfolioCommand) -> Result<()> {
     println!("");
 
     for (key, val) in token_addresses {
-        let base_contract = contracts::get_base_contract(val);
+        let base_contract = contracts::get_base_contract(val)?;
 
         let total_position_size = account_balance_contract
            .get_total_position_size(trader, val)

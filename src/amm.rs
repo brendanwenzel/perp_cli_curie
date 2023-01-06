@@ -7,7 +7,7 @@ use crate::prelude::Pools;
 /// Processing theh AMM Command
 #[tokio::main]
 pub async fn process(args: AmmCommand) -> Result<()> {
-    let pools = address_list::get_pools().await;
+    let pools = address_list::get_pools().await?;
     let pools_iter = pools.iter();
 
     async fn print_amm(pool: &Pools) -> Result<()> {
@@ -15,9 +15,9 @@ pub async fn process(args: AmmCommand) -> Result<()> {
         println!("=====  {}/{}  =====", pool.base_symbol, pool.quote_symbol);
         println!("========================");
 
-        let contract = contracts::get_base_contract(pool.base_address.parse::<Address>()?);
-        let quote_contract = contracts::get_base_contract(pool.quote_address.parse::<Address>()?);
-        let pool_contract = contracts::get_pool_contract(pool.address.parse::<Address>()?);
+        let contract = contracts::get_base_contract(pool.base_address.parse::<Address>()?)?;
+        let quote_contract = contracts::get_base_contract(pool.quote_address.parse::<Address>()?)?;
+        let pool_contract = contracts::get_pool_contract(pool.address.parse::<Address>()?)?;
 
         let index_price = contract
             .get_index_price(U256::zero())

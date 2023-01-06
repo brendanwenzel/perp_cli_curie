@@ -27,9 +27,9 @@ pub async fn process(args: CloseCommand) -> Result<()> {
         sqrt_price_after_x96: U256,
     }
 
-    let contract = contracts::get_clearing_house().await;
+    let contract = contracts::get_clearing_house().await?;
     let mut base_symbol: String = String::new();
-    let token_addresses = address_list::get_token_addresses().await;
+    let token_addresses = address_list::get_token_addresses().await?;
     let mut _direction = String::new();
     let mut base_token_address = if args.token.len() == 42 { args.token.parse::<Address>()? } else { Address::zero() };
 
