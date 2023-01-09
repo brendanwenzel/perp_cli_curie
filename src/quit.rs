@@ -1,16 +1,9 @@
 use crate::args::QuitCommand;
 use crate::{address_list, contracts, utils};
 use ethers::prelude::*;
-use serde::Serialize;
 use eyre::Result;
 
-#[derive(Clone, EthEvent, Serialize, Debug)]
-struct QuitMarket {
-    base: U256,
-    quote: U256,
-}
 
-#[tokio::main]
 /// Process the request to quit market.
 pub async fn process(args: QuitCommand) -> Result<()> {
     let signer = utils::get_wallet()?;
@@ -39,7 +32,7 @@ pub async fn process(args: QuitCommand) -> Result<()> {
 
     let quit_market = contract.quit_market(trader_address, token_address).send().await?.await?;
 
-    println!("");
+    println!();
     println!("Closed all {} positions: {:?}", base_symbol, quit_market);
 Ok(())
 }

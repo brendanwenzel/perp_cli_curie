@@ -1,6 +1,6 @@
 /// Hard-coded version of the JSON data at https://metadata.perp.exchange/v2/optimism.json
 pub fn get_metadata_json() -> String {
-  return r#"{
+  r#"{
   "chainId": 10,
   "collaterals": [
     {
@@ -454,5 +454,5 @@ pub fn get_metadata_json() -> String {
       "quoteSymbol": "vUSD"
     }
   ]
-}"#.to_string();
+}"#.to_string()
 }

@@ -42,25 +42,25 @@ pub async fn get_clearing_house() -> Result<ClearingHouseContract<SignerMiddlewa
 
 /// The contract responsible for collateral management
 pub async fn get_collateral_manager() -> Result<CollateralManagerContract<SignerMiddleware<Provider<Http>, LocalWallet>>> {
-    let contract = CollateralManagerContract::new(address_list::get_contract_addresses().await?.get("CollateralManager").unwrap().to_owned(), utils::create_http_client()?);
+    let contract = CollateralManagerContract::new(address_list::get_contract_addresses().await?.get("CollateralManager").expect("Collateral address from json").to_owned(), utils::create_http_client()?);
     Ok(contract)
 }
 
 /// The contract responsible for exchange
 pub async fn get_exchange() -> Result<ExchangeContract<SignerMiddleware<Provider<Http>, LocalWallet>>> {
-    let contract = ExchangeContract::new(address_list::get_contract_addresses().await?.get("Exchange").unwrap().to_owned(), utils::create_http_client()?);
+    let contract = ExchangeContract::new(address_list::get_contract_addresses().await?.get("Exchange").expect("Exchange address from JSON").to_owned(), utils::create_http_client()?);
     Ok(contract)
 }
 
 /// The contract responsible for market registry
 pub async fn get_market_registry() -> Result<MarketRegistryContract<SignerMiddleware<Provider<Http>, LocalWallet>>> {
-    let contract = MarketRegistryContract::new(address_list::get_contract_addresses().await?.get("MarketRegistry").unwrap().to_owned(), utils::create_http_client()?);
+    let contract = MarketRegistryContract::new(address_list::get_contract_addresses().await?.get("MarketRegistry").expect("Market Registry address from JSON").to_owned(), utils::create_http_client()?);
     Ok(contract)
 }
 
 /// OrderBook contract contains more in-depth information about positions
 pub async fn get_order_book() -> Result<OrderBookContract<SignerMiddleware<Provider<Http>, LocalWallet>>> {
-    let contract = OrderBookContract::new(address_list::get_contract_addresses().await?.get("OrderBook").unwrap().to_owned(), utils::create_http_client()?);
+    let contract = OrderBookContract::new(address_list::get_contract_addresses().await?.get("OrderBook").expect("Order Book address from JSON").to_owned(), utils::create_http_client()?);
     Ok(contract)
 }
 
@@ -84,6 +84,6 @@ pub fn get_quote_contract(token: Address) -> Result<QuoteTokenContract<SignerMid
 
 /// The contract responsible for holding collateral assets
 pub async fn get_vault() -> Result<VaultContract<SignerMiddleware<Provider<Http>, LocalWallet>>> {
-    let contract = VaultContract::new(address_list::get_contract_addresses().await?.get("Vault").unwrap().to_owned(), utils::create_http_client()?);
+    let contract = VaultContract::new(address_list::get_contract_addresses().await?.get("Vault").expect("Vault address from JSON").to_owned(), utils::create_http_client()?);
     Ok(contract)
 }

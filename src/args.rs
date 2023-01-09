@@ -24,11 +24,11 @@ pub enum SubCommand {
     Deposit(DepositCommand),
     /// Withdraw collateral from Perp account
     Withdraw(WithdrawCommand),
-    /// Close position
+    /// Close position for specified market
     Close(CloseCommand),
-    /// Open Position
+    /// Open New Position
     Open(OpenCommand),
-    /// Close all positions in a CLOSED market. Can only be used when a market is no longer active. 
+    /// Close all positions in a CLOSED market. 
     Quit(QuitCommand),
 }
 
@@ -105,10 +105,10 @@ pub struct OpenCommand {
     pub short: Option<bool>,
     /// Base token address or symbol
     pub token: String,
-    #[clap(short, long, action(ArgAction::SetTrue))]
+    #[clap(long, action(ArgAction::SetTrue))]
     /// Use this flag to specify amount IN
     pub input: Option<bool>,
-    #[clap(short, long, action(ArgAction::SetTrue))]
+    #[clap(long, action(ArgAction::SetTrue))]
     /// Use this flag to specify amount OUT
     pub output: Option<bool>,
     /// Amount to buy in decimals. Will convert to Wei in backend.

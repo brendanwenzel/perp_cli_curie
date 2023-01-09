@@ -5,10 +5,9 @@ use serde::Serialize;
 use eyre::Result;
 
 /// function to process the position command
-#[tokio::main]
+
 pub async fn process(args: PositionCommand) -> Result<()> {
 
-    /// struct to hold the necessary variables
     #[derive(Debug)]
     struct Variables {
         trader: Address,
@@ -43,22 +42,13 @@ pub async fn process(args: PositionCommand) -> Result<()> {
     let mut variables = Variables {
         trader: Address::zero(),
         base_token: Address::zero(),
-        block_limit: 0 as u64,
+        block_limit: 0_u64,
         hash: H256::zero(),
     };
 
-    match args.trader {
-        Some(address) => variables.trader = String::from(address).parse::<Address>()?,
-        None => {},
-    }
-    match args.base_token {
-        Some(address) => variables.base_token = address.parse::<Address>()?,
-        None => {},
-    }
-    match args.limit {
-        Some(block_limit) => variables.block_limit = block_limit as u64,
-        None => {variables.block_limit = 250},
-    }
+    if let Some(address) = args.trader { variables.trader = address.parse::<Address>()? }
+    if let Some(address) = args.base_token { variables.base_token = address.parse::<Address>()? }
+    if let Some(block_limit) = args.limit { variables.block_limit = block_limit as u64 }
 
     let block_number = http_provider.get_block_number().await?;
     let target_block = block_number - variables.block_limit;
@@ -87,14 +77,9 @@ pub async fn process(args: PositionCommand) -> Result<()> {
         if postion_float < 0.000000000000000002 && postion_float > -0.000000000000000002 {continue;}
         let price = notional_float / postion_float;
 
-        match log.transaction_hash {
-            Some(transaction_hash) => {
-                variables.hash = transaction_hash;
-            },
-            None => {},
-        }
+        if let Some(transaction_hash) = log.transaction_hash { variables.hash = transaction_hash; }
 
-        println!("");
+        println!();
         println!("=====================");
         println!("==== {}: {} ====", if event.exchanged_position_size < I256::zero() {String::from("SHORT")} else {" LONG".to_string()}, base_symbol);
         println!("=====================");

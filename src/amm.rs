@@ -5,7 +5,7 @@ use eyre::Result;
 use crate::prelude::Pools;
 
 /// Processing theh AMM Command
-#[tokio::main]
+
 pub async fn process(args: AmmCommand) -> Result<()> {
     let pools = address_list::get_pools().await?;
     let pools_iter = pools.iter();
@@ -61,8 +61,8 @@ pub async fn process(args: AmmCommand) -> Result<()> {
         Ok(())
     }
 
-    if args.search_parameter == None && args.short == Some(false) {
-        println!("");
+    if args.search_parameter.is_none() && args.short == Some(false) {
+        println!();
         for pool in pools_iter.clone() {
             let print_result = print_amm(pool).await;
             match print_result {
@@ -73,31 +73,42 @@ pub async fn process(args: AmmCommand) -> Result<()> {
                 }
             };
         }
-        println!("");
+        println!();
     }
 
-    match args.search_parameter {
-        Some(value) => {
-            println!("");
+    if let Some(value) = args.search_parameter {
+        println!();
         for pool in pools_iter.clone() {
             if pool.address != value && pool.base_address != value && pool.base_symbol != value {continue;}
             print_amm(pool).await?;
             break;
         }
-        println!("");
-    },
-        None => {},
+        println!();
     }
 
-    match args.short {
-        Some(short) => if short {
-            println!("");
-            for pool in pools_iter {
-                println!("- {}/{}: {}", pool.base_symbol, pool.quote_symbol, pool.address);
-            }
-            println!("");
-        },
-        None => {},
+    if let Some(short) = args.short { 
+        if short {
+            println!();
+            for pool in pools_iter {println!("- {}/{}: {}", pool.base_symbol, pool.quote_symbol, pool.address);}
+            println!();
+        }
     }
+
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn test_short_list() -> Result<()> {
+        let arg = AmmCommand{
+            search_parameter: None,
+            short: Some(true),
+        };
+        let execute = process(arg).await?;
+        assert_eq!(execute, ());
+        Ok(())
+    }    
 }

@@ -132,7 +132,6 @@ pub async fn get_contract_addresses() -> Result<HashMap<String, Address>> {
     let contracts = get_contracts().await?;
     let mut contract_addresses : HashMap<String, Address> = HashMap::new();
     for (key, value) in contracts {
-        // if value.name == String::from("contracts/BaseToken.sol:BaseToken") || value.name == String::from("contracts/ChainlinkPriceFeedV2.sol:ChainlinkPriceFeedV2") {continue;}
         let address = value.address
             .parse::<Address>()
             .expect("Failed to make Address");
@@ -146,7 +145,7 @@ pub async fn get_token_addresses() -> Result<HashMap<String, Address>> {
     let contracts = get_contracts().await?;
     let mut token_addresses: HashMap<String, Address> = HashMap::new();
     for (key, val) in contracts {
-    if val.name == String::from("contracts/BaseToken.sol:BaseToken") {
+    if &val.name == "contracts/BaseToken.sol:BaseToken" {
         let address = val.address
             .parse::<Address>()
             .expect("Failed to make Address");
@@ -171,7 +170,7 @@ pub fn get_collateral_tokens() -> Result<HashMap<String, Address>> {
 }
 
 #[cfg(test)]
-mod token_tests {
+mod data_tests {
     use super::*;
 
     #[tokio::test]

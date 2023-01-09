@@ -3,7 +3,7 @@ use crate::{args::PortfolioCommand, address_list, contracts, utils};
 use std::ops::Div;
 use eyre::Result;
 
-#[tokio::main]
+
 /// Primary function to process portfolio command
 pub async fn process(args: PortfolioCommand) -> Result<()> {
 
@@ -14,10 +14,7 @@ pub async fn process(args: PortfolioCommand) -> Result<()> {
     let clearing_house = contracts::get_clearing_house().await?;
     let mut trader = utils::get_wallet()?.address();
 
-    match args.trader_address {
-        Some(trader_add) => {trader = trader_add.parse::<Address>()?;}
-        None => {}    
-    }
+    if let Some(trader_add) = args.trader_address {trader = trader_add.parse::<Address>()?;}
 
     let total_account_value: I256 = clearing_house
        .get_account_value(trader)
@@ -39,17 +36,17 @@ pub async fn process(args: PortfolioCommand) -> Result<()> {
     let free_collateral = ethers::utils::format_units(free_collateral_value, 6)?.parse::<f64>()?;
     let token_addresses = address_list::get_token_addresses().await?;
 
-    println!("");
+    println!();
     println!("Trader Address: {:?}", trader);
     println!("Account Value: {} USD", total_value);
     println!("Owed Realized PnL: {} USD", ethers::utils::format_units(pnl_and_pending_fee.0, "ether")?.parse::<f64>()?);
     println!("Unrealized PnL: {} USD", ethers::utils::format_units(pnl_and_pending_fee.1, "ether")?.parse::<f64>()?);
-    println!("");
+    println!();
     println!("Available Balances");
     println!("==================");
     println!("- OP ETH: {}", ethers::utils::format_units(trader_balance,"ether")?.parse::<f64>()?);
     println!("- Total Free Collateral: {} USD", free_collateral);
-    println!("");
+    println!();
 
     for (key, val) in token_addresses {
         let base_contract = contracts::get_base_contract(val)?;
@@ -128,9 +125,9 @@ pub async fn process(args: PortfolioCommand) -> Result<()> {
         println!("========================");
         println!("========  {}  ========", key);
         println!("========================");
-        println!("");
+        println!();
         println!("Index Price: {}", index_float);
-        println!("");
+        println!();
         if tps_float != 0.0 || taker_unrealized_pnl != 0.0 {
         println!("*** Taker ***");
         println!("- Position Size: {}", tps_float);
@@ -138,7 +135,7 @@ pub async fn process(args: PortfolioCommand) -> Result<()> {
         println!("- Open Notional: {}", ton_float);
         println!("- Unrealized PnL: {}", taker_unrealized_pnl);
         println!("- Liquidation Price: {}", format_liquidation_price);
-        println!("");
+        println!();
         }
         if maker_position_size != 0.0 || maker_unrealized_profit != 0.0 {
         println!("*** Maker ***");
@@ -147,14 +144,14 @@ pub async fn process(args: PortfolioCommand) -> Result<()> {
         println!("- Unrealized PnL: {}", maker_unrealized_profit);
         println!("- Pending Fees: {}", pending_fee_value);
         println!("- Open Notional: {}", maker_open_notional);
-        println!("");
+        println!();
         }
         if tps_float != 0.0 && maker_position_size != 0.0 {
         println!("*** Total ***");
         println!("- Position: {}", format_total_position_size);
         println!("- Open Notional: {}", total_open_notional_float);
         println!("- Position Value (USD): {}", position_value);
-        println!("");
+        println!();
         }
     }
     Ok(())

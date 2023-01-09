@@ -3,7 +3,7 @@ use serde::Serialize;
 use ethers::prelude::*;
 use eyre::Result;
 
-#[tokio::main]
+
 /// The function to process the Close command
 pub async fn process(args: CloseCommand) -> Result<()> {
 
@@ -60,10 +60,10 @@ pub async fn process(args: CloseCommand) -> Result<()> {
         }
 
     let tx = contract.close_position(close_position_params).send().await?.await?;
-    let tx_receipt = tx.unwrap();
+    let tx_receipt = tx.expect("Transaction Receipt");
     let logs: Vec<PositionChanged> = contract
         .event()
-        .from_block(tx_receipt.block_number.unwrap())
+        .from_block(tx_receipt.block_number.expect("Block number from transaction receipt"))
         .query()
         .await?;
 
@@ -75,17 +75,17 @@ pub async fn process(args: CloseCommand) -> Result<()> {
 
     let avg_price = position_notional_float / position_size_float;
 
-    println!("");
+    println!();
     println!("========================");
     println!("==== CLOSING {} ====", base_symbol);
     println!("========================");
-    println!("");
+    println!();
     println!("Transaction: {:#?}", tx_receipt.transaction_hash);
     println!("Position Size: {} {}", position_size_float, base_symbol);
     println!("Avg Price: {} USD", avg_price.abs());
     println!("Fee Paid: {} USD", ethers::utils::format_units(logs[0].fee, "ether")?.parse::<f64>()?);
     println!("Profit: {} USD", ethers::utils::format_units(logs[0].realized_pnl, "ether")?.parse::<f64>()?);
-    println!("");
-    println!("");
+    println!();
+    println!();
     Ok(())
 }

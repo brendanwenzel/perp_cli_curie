@@ -4,71 +4,62 @@ use crate::{address_list, contracts};
 use ethers::prelude::*;
 use eyre::Result;
 
-#[tokio::main]
 /// Process withdraw requests
 pub async fn process(args: WithdrawCommand) -> Result<()> {
     let vault_contract = contracts::get_vault().await?;
     let collaterals = address_list::get_collateral_tokens()?;
 
-    if args.token == None && args.amount == None && args.eth == None {
+    if args.token.is_none() && args.amount.is_none() && args.eth.is_none() {
+        println!();
         for (key, val) in &collaterals { println!("{}: {:?}", key, val); }
-        eprintln!("");
+        println!();
     }
 
     let mut token_address = Address::zero();
     let mut withdraw_amount = U256::zero();
     let mut token_symbol = String::new();
 
-    match args.token {
-        Some(token) => {
-            for (key, val) in collaterals {
-                if token.parse::<Address>()? != val { continue; }
-                if token.parse::<Address>()? == val { 
-                    token_symbol = key;
-                    break; 
-                }
-                eprintln!("Token address given doesn't match accepted list of collaterals. Use 'perp withdraw' to see available tokens.");
+    if let Some(token) = args.token {
+        for (key, val) in collaterals {
+            if token.parse::<Address>()? != val { continue; }
+            if token.parse::<Address>()? == val { 
+                token_symbol = key;
+                break; 
             }
-            token_address = token.parse::<Address>()?;
-        },
-        None => {}
+            panic!("Token address given doesn't match accepted list of collaterals. Use 'perp withdraw' to see available tokens.");
+        }
+        token_address = token.parse::<Address>()?;        
     }
 
     let base_contract = contracts::get_base_contract(token_address)?;
 
-    match args.amount {
-        Some(amount) => { 
-            let decimals = base_contract
-               .decimals()
-               .call()
-               .await?;
-            withdraw_amount = ethers::utils::parse_units(amount, decimals as u32)?.into();
-         }
-        None => {}
+    if let Some(amount) = args.amount {
+        let decimals = base_contract
+            .decimals()
+            .call()
+            .await?;
+        withdraw_amount = ethers::utils::parse_units(amount, decimals as u32)?.into();
     }
 
-    match args.eth {
-        Some(eth) => {
-            let amount: U256 = ethers::utils::parse_units(eth, "ether")?.into();
-            let tx = vault_contract
-               .withdraw_ether(amount)
-               .send()
-               .await?
-               .await?
-               .unwrap();
+    if let Some(eth) = args.eth {
+        let amount: U256 = ethers::utils::parse_units(eth, "ether")?.into();
+        let tx = vault_contract
+           .withdraw_ether(amount)
+           .send()
+           .await?
+           .await?
+           .expect("Withdraw Ether from Vault Contract");
 
-            eprintln!("Withdrew {} ETH\nTransaction: {:#?}", eth, tx.transaction_hash);
-        },
-        None => {}
+        println!("Withdrew {} ETH\nTransaction: {:#?}", eth, tx.transaction_hash);        
     }
 
-    if token_address != Address::zero() && args.amount != None && args.eth == None {
+    if token_address != Address::zero() && args.amount.is_some() && args.eth.is_none() {
         let withdraw: TransactionReceipt = vault_contract
             .withdraw(token_address, withdraw_amount)
             .send()
             .await?
             .await?
-            .unwrap();
+            .expect("Withdraw through the Vault Contract");
 
             println!("Withdrew {:?} {}\nTransaction: {:#?}", args.amount, token_symbol, withdraw.transaction_hash);
         }
