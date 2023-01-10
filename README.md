@@ -393,3 +393,6 @@ Closed all vBTC positions for 1948.234556321223459 USD
 - Buffer the print line statements to output all at the same time
 - Add bound parameter for opening orders
 - Threading non-dependent contract calls
+- Add Config file with different profiles
+- Add Symbol options for Deposit/Withdrawal
+- Add Anvil for testing with forked network

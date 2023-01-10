@@ -346,7 +346,7 @@ mod tests {
         let arg = PerpArgs {
             cmd: Withdraw(
                     WithdrawCommand {
-                        token: Some(String::from("WETH")),
+                        token: Some(String::from("0x4200000000000000000000000000000000000006")),
                         amount: Some(amount),
                         eth: None,
                     }
@@ -386,7 +386,7 @@ mod tests {
         let arg = PerpArgs {
             cmd: Withdraw(
                     WithdrawCommand {
-                        token: Some(String::from("USDC")),
+                        token: Some(String::from("0x7F5c764cBc14f9669B88837ca1490cCa17c31607")),
                         amount: Some(amount),
                         eth: None,
                     }
@@ -426,7 +426,7 @@ mod tests {
         let arg = PerpArgs {
             cmd: Withdraw(
                     WithdrawCommand {
-                        token: Some(String::from("USDT")),
+                        token: Some(String::from("0x94b008aA00579c1307B0EF2c499aD98a8ce58e58")),
                         amount: Some(amount),
                         eth: None,
                     }
@@ -466,7 +466,7 @@ mod tests {
         let arg = PerpArgs {
             cmd: Withdraw(
                     WithdrawCommand {
-                        token: Some(String::from("OP")),
+                        token: Some(String::from("0x4200000000000000000000000000000000000042")),
                         amount: Some(amount),
                         eth: None,
                     }

@@ -15,6 +15,19 @@ pub async fn process(args: WithdrawCommand) -> Result<()> {
         println!();
     }
 
+    if let Some(eth) = args.eth {
+        let amount: U256 = ethers::utils::parse_units(eth, "ether")?.into();
+        let tx = vault_contract
+           .withdraw_ether(amount)
+           .send()
+           .await?
+           .await?
+           .expect("Withdraw Ether from Vault Contract");
+
+        println!("Withdrew {} ETH\nTransaction: {:#?}", eth, tx.transaction_hash);
+        return Ok(());        
+    }
+
     let mut token_address = Address::zero();
     let mut withdraw_amount = U256::zero();
     let mut token_symbol = String::new();
@@ -39,18 +52,6 @@ pub async fn process(args: WithdrawCommand) -> Result<()> {
             .call()
             .await?;
         withdraw_amount = ethers::utils::parse_units(amount, decimals as u32)?.into();
-    }
-
-    if let Some(eth) = args.eth {
-        let amount: U256 = ethers::utils::parse_units(eth, "ether")?.into();
-        let tx = vault_contract
-           .withdraw_ether(amount)
-           .send()
-           .await?
-           .await?
-           .expect("Withdraw Ether from Vault Contract");
-
-        println!("Withdrew {} ETH\nTransaction: {:#?}", eth, tx.transaction_hash);        
     }
 
     if token_address != Address::zero() && args.amount.is_some() && args.eth.is_none() {
