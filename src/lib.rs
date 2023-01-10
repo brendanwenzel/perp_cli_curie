@@ -46,7 +46,10 @@ pub mod close;
 /// Metadata JSON
 pub mod metadata;
 
+/// Swap ERC-20 tokens on Velodrome
+pub mod swap;
+
 /// Re-export a prelude
 pub mod prelude {
-    pub use super::{amm::*, metadata::*, deposit::*, withdraw::*, open::*, close::*, args::*, position::*, portfolio::*, quit::*, address_list::*, contracts::*, utils::*};
+    pub use super::{amm::*, metadata::*, deposit::*, withdraw::*, swap::*, open::*, close::*, args::*, position::*, portfolio::*, quit::*, address_list::*, contracts::*, utils::*};
 }

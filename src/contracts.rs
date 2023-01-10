@@ -21,10 +21,22 @@ abigen!(PerpPortalContract, "src/abis/IPerpPortal.json");
 abigen!(PoolContract, "src/abis/IPool.json");
 abigen!(QuoteTokenContract, "src/abis/IQuoteToken.json");
 abigen!(VaultContract, "src/abis/IVault.json");
+abigen!(VelodromeContract, "src/abis/IVelodromeRouter.json");
+abigen!(TokenContract, "src/abis/IErc20.json");
 
 /// Account Balance Contains Mostly Functions to Obtain Information Regarding Position Sizes
 pub async fn get_account_balance() -> Result<AccountBalanceContract<SignerMiddleware<Provider<Http>, LocalWallet>>> {
     let contract = AccountBalanceContract::new(address_list::get_account_balance().await?.parse::<Address>()?, utils::create_http_client()?);
+    Ok(contract)
+}
+
+pub fn get_velodrome_contract() -> Result<VelodromeContract<SignerMiddleware<Provider<Http>, LocalWallet>>> {
+    let contract = VelodromeContract::new(address_list::get_velodrome()?, utils::create_http_client()?);
+    Ok(contract)
+}
+
+pub fn get_token_contract(token: Address) -> Result<TokenContract<SignerMiddleware<Provider<Http>, LocalWallet>>> {
+    let contract = TokenContract::new(token, utils::create_http_client()?);
     Ok(contract)
 }
 

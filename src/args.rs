@@ -1,4 +1,5 @@
 use clap::{ Args, Parser, Subcommand, ArgAction };
+use ethers::types::Address;
 
 #[derive(Debug, Parser)]
 #[clap(author, version, about)]
@@ -30,6 +31,26 @@ pub enum SubCommand {
     Open(OpenCommand),
     /// Close all positions in a CLOSED market. 
     Quit(QuitCommand),
+    /// Swap ETH or ERC-20 tokens on Velodrome for collateral tokens
+    Swap(SwapCommand),
+}
+
+#[derive(Debug, Args)]
+/// Arguments in order to make a swap
+pub struct SwapCommand {
+    /// Token Address of token in
+    pub token_in: Address, 
+    /// The amount of tokens to swap
+    pub amount_in: f64,
+    /// Token Address of token out
+    pub token_out: Address,
+    /// The percentage of acceptable slippage for the swap. 
+    /// ie 1.5 would mean 1.5% slippage is acceptable.
+    pub slippage: f64,
+    #[clap(long, action(ArgAction::SetTrue))]
+    /// If you want to swap to or from unwrapped ETH
+    /// use the --ETH flag at the end of the command
+    pub eth: Option<bool>,
 }
 
 #[derive(Debug, Args)]
@@ -74,7 +95,7 @@ pub struct AmmCommand {
 /// Deposit Command
 pub struct DepositCommand {
     /// Token address to deposit as collateral. Use "perp deposit" for list of accepted collateral tokens.
-    pub token: Option<String>,
+    pub token: Option<Address>,
     /// Amount to deposit... for example 0.1 or 600.594... backend will convert to wei format.
     pub amount: Option<f64>,
     #[clap(long)]

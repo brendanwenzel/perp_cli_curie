@@ -35,6 +35,7 @@ pub async fn process(args: PortfolioCommand) -> Result<()> {
     let trader_balance = http_provider.get_balance(trader, None).await?;
     let free_collateral = ethers::utils::format_units(free_collateral_value, 6)?.parse::<f64>()?;
     let token_addresses = address_list::get_token_addresses().await?;
+    let collateral_addresses = address_list::get_collateral_tokens()?;
 
     println!();
     println!("Trader Address: {:?}", trader);
@@ -46,6 +47,23 @@ pub async fn process(args: PortfolioCommand) -> Result<()> {
     println!("==================");
     println!("- OP ETH: {}", ethers::utils::format_units(trader_balance,"ether")?.parse::<f64>()?);
     println!("- Total Free Collateral: {} USD", free_collateral);
+    println!();
+    println!("Collateral Balances");
+    println!("===================");
+    for (key, val) in collateral_addresses {
+        let token_contract = contracts::get_token_contract(val)?;
+        let amount = vault_contract
+            .get_balance_by_token(trader, val)
+            .call()
+            .await?;
+        let decimals = token_contract
+           .decimals()
+           .call()
+           .await?;
+        if amount != I256::zero() {
+            println!("{}: {}", key, ethers::utils::format_units(amount, decimals as u32)?);
+        }
+    }
     println!();
 
     for (key, val) in token_addresses {

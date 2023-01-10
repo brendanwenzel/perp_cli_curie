@@ -127,6 +127,12 @@ pub fn get_perp_portal() -> Result<Address> {
     Ok(contract_data)
 }
 
+/// Velodrome Address
+pub fn get_velodrome() -> Result<Address> {
+    let contract_data = String::from("0x9c12939390052919aF3155f41Bf4160Fd3666A6f").parse::<Address>()?;
+    Ok(contract_data)
+}
+
 /// Contract Addresses
 pub async fn get_contract_addresses() -> Result<HashMap<String, Address>> {
     let contracts = get_contracts().await?;

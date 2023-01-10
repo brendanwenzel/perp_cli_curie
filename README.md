@@ -357,6 +357,27 @@ Fee Paid: 9.358369807620463 USD
 Profit: 0.29129 USD
 ```
 
+## Swap Collateral Tokens
+Swap collateral tokens using the Velodrome router.
+
+You must use token addresses. If you want to swap from unwrapped ETH, put the WETH address for the token_in and use the --eth flag to specify swapping from unwrapped ETH.
+
+```bash
+perp swap <token_in> <amount_in> <token_out> [--eth]
+```
+
+### Example
+
+```bash
+perp swap 0x7F5c764cBc14f9669B88837ca1490cCa17c31607 125.21234 0x4200000000000000000000000000000000000042 0.25
+
+#Output
+Not enough allowance to swap this token. Submitting approval now.
+Approval succeeded and now sending swap request
+Approval Transaction Hash: 0x68...9482e
+Swap Successful! Transaction: 0x342...1fa34
+```
+
 ## Quit Market
 Close all positions in the specific market ONLY if the market is closed and no longer active. If market is active, please use the "close" command.
 
