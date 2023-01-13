@@ -72,8 +72,7 @@ pub async fn process(args: PortfolioCommand) -> Result<()> {
         let total_position_size = account_balance_contract
            .get_total_position_size(trader, val)
            .call()
-           .await
-           ?;
+           .await?;
         
            if total_position_size == I256::zero() {continue;}
         

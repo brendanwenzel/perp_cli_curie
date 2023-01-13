@@ -11,3 +11,5 @@ Cargo.lock
 
 .env
 .env.prod
+.vsCodeCounter/*
+.git

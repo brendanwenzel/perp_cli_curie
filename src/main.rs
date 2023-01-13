@@ -493,58 +493,110 @@ mod tests {
 
     #[tokio::test]
     async fn test_e_shorting() -> Result<()> {
+        let account_balance_contract = contracts::get_account_balance().await?;
+        let wallet = utils::get_wallet()?;
+        let trader = wallet.address();
+        let amount_out = 14.3;
+        let token = "0x8711ac690984BAdC42e7AbE71f351b5Ac2a2Ad0d".parse::<H160>()?;
+        let pre_balance = account_balance_contract
+            .get_total_position_size(trader, token)
+            .call()
+            .await?;
         let arg = PerpArgs {
             cmd: Open(
                 OpenCommand {
                     long: Some(false),
                     short: Some(true),
-                    token: String::from("BNB"),
+                    token: String::from("DOGE"),
                     input: Some(true),
                     output: Some(false),
-                    order_amount: 5.12423,
+                    order_amount: amount_out,
                     limit: None,
                 }
             )
         };
         match_args(arg).await?;
+
+        let post_balance = account_balance_contract
+            .get_total_position_size(trader, token)
+            .call()
+            .await?;
+
+        assert!(post_balance < pre_balance);
+
         Ok(())
     }
 
     #[tokio::test]
     async fn test_f_longing() -> Result<()> {
+        let account_balance_contract = contracts::get_account_balance().await?;
+        let wallet = utils::get_wallet()?;
+        let trader = wallet.address();
+        let amount_out = 14.3;
+        let token = "0x8711ac690984BAdC42e7AbE71f351b5Ac2a2Ad0d".parse::<H160>()?;
+        let pre_balance = account_balance_contract
+            .get_total_position_size(trader, token)
+            .call()
+            .await?;
         let arg = PerpArgs {
             cmd: Open(
                 OpenCommand {
                     long: Some(true),
                     short: Some(false),
-                    token: String::from("BNB"),
+                    token: String::from("vDOGE"),
                     input: Some(true),
                     output: Some(false),
-                    order_amount: 5.12423,
+                    order_amount: amount_out,
                     limit: None,
                 }
             )
         };
         match_args(arg).await?;
+
+        let post_balance = account_balance_contract
+            .get_total_position_size(trader, token)
+            .call()
+            .await?;
+
+        assert!(post_balance > pre_balance);
+
         Ok(())
     }
 
     #[tokio::test]
     async fn test_g_output() -> Result<()> {
+        let account_balance_contract = contracts::get_account_balance().await?;
+        let wallet = utils::get_wallet()?;
+        let trader = wallet.address();
+        let amount_out = 14.3;
+        let token = "0xBe5de48197fc974600929196239E264EcB703eE8".parse::<H160>()?;
+        let pre_balance = account_balance_contract
+            .get_total_position_size(trader, token)
+            .call()
+            .await?;
+
         let arg = PerpArgs {
             cmd: Open(
                 OpenCommand {
                     long: Some(true),
                     short: Some(false),
-                    token: String::from("BNB"),
+                    token: String::from("MATIC"),
                     input: Some(false),
                     output: Some(true),
-                    order_amount: 5.12423,
+                    order_amount: amount_out,
                     limit: None,
                 }
             )
         };
         match_args(arg).await?;
+
+        let post_balance = account_balance_contract
+            .get_total_position_size(trader, token)
+            .call()
+            .await?;
+        
+        assert_eq!(ethers::utils::format_units(post_balance - pre_balance, 18)?.parse::<f64>()?, amount_out);
+
         Ok(())
     }
 
