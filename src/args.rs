@@ -1,10 +1,10 @@
-use clap::{ Args, Parser, Subcommand, ArgAction };
+use clap::{ArgAction, Args, Parser, Subcommand};
 use ethers::types::Address;
 
 #[derive(Debug, Parser)]
 #[clap(author, version, about)]
 /// Pulls in Primary Commands
-pub struct PerpArgs{
+pub struct PerpArgs {
     #[clap(subcommand)]
     /// The command to run
     pub cmd: SubCommand,
@@ -29,22 +29,38 @@ pub enum SubCommand {
     Close(CloseCommand),
     /// Open New Position
     Open(OpenCommand),
-    /// Close all positions in a CLOSED market. 
+    /// Close all positions in a CLOSED market.
     Quit(QuitCommand),
     /// Swap ETH or ERC-20 tokens on Velodrome for collateral tokens
     Swap(SwapCommand),
+    /// Setup or edit the configuration settings of the app
+    Config(ConfigCommand),
+}
+
+#[derive(Debug, Args)]
+/// Setting up configuration settings for the app
+pub struct ConfigCommand {
+    #[clap(long, action(ArgAction::SetTrue))]
+    /// Provide an RPC URL from a node provider or your local node
+    pub rpc: Option<bool>,
+    #[clap(long, action(ArgAction::SetTrue))]
+    /// Provide a different Chain ID for testing purposes with forked networks
+    pub chain: Option<bool>,
+    #[clap(long, action(ArgAction::SetTrue))]
+    /// Provide the key for the wallet doing the trading
+    pub pk: Option<bool>,
 }
 
 #[derive(Debug, Args)]
 /// Arguments in order to make a swap
 pub struct SwapCommand {
     /// Token Address of token in
-    pub token_in: Address, 
+    pub token_in: Address,
     /// The amount of tokens to swap
     pub amount_in: f64,
     /// Token Address of token out
     pub token_out: Address,
-    /// The percentage of acceptable slippage for the swap. 
+    /// The percentage of acceptable slippage for the swap.
     /// ie 1.5 would mean 1.5% slippage is acceptable.
     pub slippage: f64,
     #[clap(long, action(ArgAction::SetTrue))]
@@ -62,7 +78,7 @@ pub struct TokensCommand {
 }
 #[derive(Debug, Args)]
 /// Position Command
-pub struct PositionCommand { 
+pub struct PositionCommand {
     #[clap(short, long)]
     /// Use the trader address to filter only that trader's positions
     pub trader: Option<String>,
@@ -84,7 +100,7 @@ pub struct PortfolioCommand {
 #[derive(Debug, Args)]
 /// Amm Command
 pub struct AmmCommand {
-    #[clap(short, long, action(ArgAction::SetTrue),)]
+    #[clap(short, long, action(ArgAction::SetTrue))]
     /// --short flag prints list of available pools
     pub short: Option<bool>,
     /// Search with pool address, base token address or base token symbol (ie vBTC, vPERP, vSOL)

@@ -7,6 +7,9 @@
 /// Common Utilities
 pub mod utils;
 
+/// Config
+pub mod config;
+
 /// Contract Instances
 pub mod contracts;
 
@@ -51,5 +54,8 @@ pub mod swap;
 
 /// Re-export a prelude
 pub mod prelude {
-    pub use super::{amm::*, metadata::*, deposit::*, withdraw::*, swap::*, open::*, close::*, args::*, position::*, portfolio::*, quit::*, address_list::*, contracts::*, utils::*};
+    pub use super::{
+        address_list::*, amm::*, args::*, close::*, config::*, contracts::*, deposit::*,
+        metadata::*, open::*, portfolio::*, position::*, quit::*, swap::*, utils::*, withdraw::*,
+    };
 }
