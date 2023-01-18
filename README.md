@@ -12,7 +12,7 @@ Suggested features are always welcome as well.
 
 ## Installation
 
-### Build from Source
+### Build from Source - HIGHLY RECOMMENDED
 
 Install Rustup with the instructions at [https://www.rust-lang.org/tools/install](https://www.rust-lang.org/tools/install)
 
@@ -24,7 +24,7 @@ cd perp_cli_curie
 cargo install --path .
 ```
 
-### Install Binaries on UNIX-Based Systems (Linux/Apple)
+### Install Binaries on UNIX-Based Systems (Linux/Apple) - NEEDS UPDATING
 
 Download the latest release of the PERP CLI from the [Release Page](https://github.com/brendanwenzel/perp_cli_curie/releases/tag/v0.1.0)
 
