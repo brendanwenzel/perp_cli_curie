@@ -34,22 +34,33 @@ sudo install $FILE_NAME /usr/local/bin/perp
 rm $FILE_NAME
 ```
 
-## Environment Variables
+// ## Environment Variables
 
-Add a .env file to the same folder as the perp app with the following parameters:
+// Add a .env file to the same folder as the perp app with the following parameters:
 
-```
-RPC_URL=
-CHAIN_ID=
-PRIVATE_KEY=
-```
-The other option is to provide environment variables for each session by passing the following prior to using the CLI:
+// ```
+// RPC_URL=
+// CHAIN_ID=
+// PRIVATE_KEY=
+// ```
+// The other option is to provide environment variables for each session by passing the following prior to using the CLI:
+
+// ```bash
+// export RPC_URL="https://alchemylink.com"
+// export CHAIN_ID="10"
+// export PRIVATE_KEY="asdf...1234"
+// ```
+
+## Configuration Settings
+
+Nothing will work until you have setup the app's configurations.
 
 ```bash
-export RPC_URL="https://alchemylink.com"
-export CHAIN_ID="10"
-export PRIVATE_KEY="asdf...1234"
+perp config [--rpc] [--chain] [--pk]
 ```
+Using no flags will print your current settings or ask you to change them if they are not valid. This is a great way to first setup your file.
+
+Each flag will allow you to change single parts of the file when you need to.
 
 ## Show Positions
 
@@ -393,6 +404,5 @@ Closed all vBTC positions for 1948.234556321223459 USD
 - Buffer the print line statements to output all at the same time
 - Add bound parameter for opening orders
 - Threading non-dependent contract calls
-- Add Config file with different profiles
 - Add Symbol options for Deposit/Withdrawal
 - Add Anvil for testing with forked network
