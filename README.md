@@ -34,22 +34,22 @@ sudo install $FILE_NAME /usr/local/bin/perp
 rm $FILE_NAME
 ```
 
-// ## Environment Variables
+[//]: # ## Environment Variables
 
-// Add a .env file to the same folder as the perp app with the following parameters:
+[//]: # Add a .env file to the same folder as the perp app with the following parameters:
 
-// ```
-// RPC_URL=
-// CHAIN_ID=
-// PRIVATE_KEY=
-// ```
-// The other option is to provide environment variables for each session by passing the following prior to using the CLI:
+[//]: # ```
+[//]: # RPC_URL=
+[//]: # CHAIN_ID=
+[//]: # PRIVATE_KEY=
+[//]: # ```
+[//]: # The other option is to provide environment variables for each session by passing the following prior to using the CLI:
 
-// ```bash
-// export RPC_URL="https://alchemylink.com"
-// export CHAIN_ID="10"
-// export PRIVATE_KEY="asdf...1234"
-// ```
+[//]: # ```bash
+[//]: # export RPC_URL="https://alchemylink.com"
+[//]: # export CHAIN_ID="10"
+[//]: # export PRIVATE_KEY="asdf...1234"
+[//]: # ```
 
 ## Configuration Settings
 
