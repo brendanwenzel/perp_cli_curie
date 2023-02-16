@@ -23,14 +23,17 @@ pub fn get_config() -> std::io::Result<Config> {
         Ok(_) => {}
         Err(_) => change_rpc()?,
     }
-    if original_config.pk.len() != 64 {
+    if original_config.pk.len() != 64
+        || original_config.pk == "0000000000000000000000000000000000000000000000000000000000000001"
+    {
         change_pk()?;
     }
     let config = convert()?;
     Ok(config)
 }
 
-fn config_path() -> std::io::Result<PathBuf> {
+/// Configuration path on the local machine
+pub fn config_path() -> std::io::Result<PathBuf> {
     let path = if let Some(proj_dirs) = ProjectDirs::from("dev", "perp", "curie_cli") {
         let project_dir = proj_dirs.config_dir();
         if !project_dir.try_exists()? {
@@ -149,7 +152,7 @@ fn create(dir: &Path) -> std::io::Result<()> {
 fn default() -> &'static str {
     r#"rpc_url = "None"
 chain_id = "10"
-pk = "None""#
+pk = "0000000000000000000000000000000000000000000000000000000000000001""#
 }
 
 #[cfg(test)]

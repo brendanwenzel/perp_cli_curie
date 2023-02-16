@@ -44,6 +44,7 @@ async fn match_args(args: PerpArgs) -> Result<()> {
                 println!("RPC URL: {}", config.rpc_url);
                 println!("CHAIN ID: {}", config.chain_id);
                 println!("KEY: {}", config.pk);
+                println!("Config Path: {}", config::config_path()?.to_str().unwrap());
             }
         }
     }
