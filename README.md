@@ -14,7 +14,17 @@ Suggested features are always welcome as well.
 
 ### Build from Source - HIGHLY RECOMMENDED
 
+#### Prerequisite Requirements
+
 Install Rustup with the instructions at [https://www.rust-lang.org/tools/install](https://www.rust-lang.org/tools/install)
+
+Install libssl-dev on Ubuntu:
+
+```bash
+sudo apt install libssl-dev
+```
+
+#### Install CLI
 
 Clone this repository and install the app:
 
